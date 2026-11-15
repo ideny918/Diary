@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#E9E3D9}a{color:#B4573A}a:hover{color:#8E3F26}input,textarea,button{font-family:inherit}input::placeholder,textarea::placeholder{color:#9A9086}</style>
+</helmet>
+<div style="display:flex;flex-direction:column;align-items:center;gap:14px;font-family:'Hanken Grotesk',sans-serif;color:#221E1A">
+<sc-if value="{{ controls }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:4px;padding:4px;background:#DCD4C8;border-radius:999px">
+<button onClick="{{ setIOS }}" style="border:none;cursor:pointer;padding:8px 18px;border-radius:999px;font-size:13px;font-weight:600;background:{{ iosBtnBg }};color:#221E1A">iOS</button>
+<button onClick="{{ setAndroid }}" style="border:none;cursor:pointer;padding:8px 18px;border-radius:999px;font-size:13px;font-weight:600;background:{{ andBtnBg }};color:#221E1A">Android</button>
+</div>
+</sc-if>
+<div style="width:390px;height:844px;padding:6px;background:#1B1917;border-radius:58px;box-shadow:0 30px 60px -20px rgba(40,30,20,.35)">
+<div style="width:390px;height:844px;border-radius:52px;overflow:hidden;position:relative;background:#F4EFE7;display:flex;flex-direction:column">
+
+<sc-if value="{{ ios }}" hint-placeholder-val="{{ true }}">
+<div style="height:54px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:6px 30px 0 48px;position:relative">
+<span style="font-size:16px;font-weight:600">9:41</span>
+<div style="position:absolute;left:50%;top:11px;width:122px;height:35px;margin-left:-61px;background:#000;border-radius:20px"></div>
+<div style="display:flex;align-items:center;gap:6px">
+<svg width="18" height="12" viewBox="0 0 18 12" fill="#221E1A"><rect x="0" y="8" width="3" height="4" rx="1"></rect><rect x="5" y="5.5" width="3" height="6.5" rx="1"></rect><rect x="10" y="3" width="3" height="9" rx="1"></rect><rect x="15" y="0" width="3" height="12" rx="1"></rect></svg>
+<div style="width:25px;height:12px;border:1.5px solid rgba(34,30,26,.45);border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:75%;height:100%;background:#221E1A;border-radius:1.5px"></div></div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ android }}" hint-placeholder-val="{{ false }}">
+<div style="height:40px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:4px 24px 0;position:relative">
+<span style="font-size:14px;font-weight:500">9:41</span>
+<div style="position:absolute;left:50%;top:12px;width:14px;height:14px;margin-left:-7px;background:#000;border-radius:50%"></div>
+<div style="display:flex;align-items:center;gap:6px">
+<svg width="14" height="14" viewBox="0 0 14 14" fill="#221E1A"><path d="M14 0v14H0z"></path></svg>
+<div style="width:9px;height:15px;border-radius:2px;background:#221E1A"></div>
+</div>
+</div>
+</sc-if>
+
+<div ref="{{ scrollRef }}" style="flex:1;overflow-y:auto;overflow-x:hidden;position:relative;scrollbar-width:none">
+
+<sc-if value="{{ sLock }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;align-items:center;padding:70px 0 30px;box-sizing:border-box">
+<div style="font:400 44px/1 'Instrument Serif',serif;letter-spacing:.22em;padding-left:.22em">DIARY</div>
+<div style="margin-top:18px;font-size:15px;color:#6B6259">Enter your passcode</div>
+<div style="display:flex;gap:18px;margin-top:26px">
+<sc-for list="{{ dots }}" as="d" hint-placeholder-count="4"><div style="width:13px;height:13px;border-radius:50%;border:1.5px solid #221E1A;background:{{ d.bg }};transition:background .15s"></div></sc-for>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,78px);gap:18px 26px;margin-top:56px">
+<sc-for list="{{ keys }}" as="k" hint-placeholder-count="12">
+<button onClick="{{ k.press }}" style="width:78px;height:78px;border-radius:50%;border:none;cursor:pointer;background:{{ k.bg }};color:#221E1A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:{{ k.size }}" style-active="background:#E2D9CC">
+<span style="font-weight:400">{{ k.label }}</span>
+<span style="font-size:9px;font-weight:600;letter-spacing:.18em;color:#6B6259">{{ k.sub }}</span>
+</button>
+</sc-for>
+</div>
+<div style="margin-top:auto;font-size:12px;color:#6B6259">Prototype: any 4 digits unlock</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sToday }}" hint-placeholder-val="{{ true }}">
+<div style="padding:10px 20px 120px">
+<div style="display:flex;justify-content:space-between;align-items:flex-start">
+<div>
+<div style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6B6259">Sunday, 15 November</div>
+<div style="font:400 40px/1.05 'Instrument Serif',serif;margin-top:8px">Good morning.</div>
+</div>
+<button onClick="{{ goSettings }}" style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(34,30,26,.14);background:#FBF8F2;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#221E1A"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.7;stroke-linecap:round"><circle cx="12" cy="12" r="3"></circle><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"></path></svg></button>
+</div>
+<sc-if value="{{ showPrompt }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:22px;background:#221E1A;color:#F4EFE7;border-radius:22px;padding:20px 20px 18px">
+<div style="font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#CFC5B8">Today's prompt</div>
+<div style="font:italic 400 27px/1.2 'Instrument Serif',serif;margin-top:10px;text-wrap:pretty;min-height:64px">{{ prompt }}</div>
+<div style="display:flex;gap:10px;margin-top:18px">
+<button onClick="{{ writePrompt }}" style="flex:1;height:46px;border:none;border-radius:14px;background:#C8694A;color:#fff;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:#B4573A">Write about it</button>
+<button onClick="{{ nextPrompt }}" title="Another prompt" style="width:46px;height:46px;border-radius:14px;border:1px solid rgba(244,239,231,.25);background:transparent;color:#F4EFE7;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round"><path d="M3 7h4l10 10h4M3 17h4l3-3M14 10l3-3h4M18 4l3 3-3 3M18 14l3 3-3 3"></path></svg></button>
+</div>
+</div>
+</sc-if>
+<div style="margin-top:26px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6B6259">This week</div>
+<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:12px">
+<sc-for list="{{ week }}" as="w" hint-placeholder-count="7">
+<div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+<span style="font-size:11px;font-weight:600;color:#6B6259">{{ w.dow }}</span>
+<div style="width:34px;height:34px;border-radius:50%;background:{{ w.bg }};border:{{ w.border }};box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600">{{ w.d }}</div>
+</div>
+</sc-for>
+</div>
+<div style="margin-top:28px;margin-bottom:4px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6B6259">Recent</div>
+<sc-for list="{{ recent }}" as="e" hint-placeholder-count="4">
+<button onClick="{{ e.open }}" style="width:100%;text-align:left;background:none;border:none;border-top:1px solid rgba(34,30,26,.1);color:inherit;cursor:pointer;display:grid;grid-template-columns:42px 1fr;gap:14px;padding:16px 0">
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><span style="font:400 30px/1 'Instrument Serif',serif">{{ e.day }}</span><span style="font-size:10px;font-weight:600;letter-spacing:.12em;color:#6B6259">{{ e.dow }}</span></div>
+<div style="display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font-size:16px;font-weight:600">{{ e.title }}</span>
+<span style="font-size:14px;line-height:1.45;color:#6B6259">{{ e.excerpt }}</span>
+<span style="display:flex;align-items:center;gap:10px;font-size:12px;color:#6B6259;margin-top:2px"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:{{ e.moodC }}"></span>{{ e.moodL }}</span><span>{{ e.tagsStr }}</span></span>
+</div>
+</button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ sWrite }}" hint-placeholder-val="{{ false }}">
+<div style="position:sticky;top:0;z-index:3;background:#F4EFE7;display:flex;align-items:center;justify-content:space-between;padding:6px 16px 10px;border-bottom:1px solid rgba(34,30,26,.08)">
+<button onClick="{{ goBack }}" style="height:44px;padding:0 6px;border:none;background:none;font-size:16px;color:#6B6259;cursor:pointer">Cancel</button>
+<span style="font-size:15px;font-weight:600">New entry</span>
+<button onClick="{{ save }}" style="height:36px;padding:0 18px;border:none;border-radius:999px;background:#B4573A;color:#fff;font-size:15px;font-weight:600;cursor:pointer;opacity:{{ saveOpacity }}">Save</button>
+</div>
+<div style="padding:16px 20px 40px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+<span style="font-size:13px;font-weight:600">Sun 15 Nov · {{ nowTime }}</span>
+<sc-if value="{{ stampOn }}" hint-placeholder-val="{{ true }}">
+<span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#6B6259;padding:5px 10px;border-radius:999px;background:#ECE5DA"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linejoin:round"><path d="M7 18h10a4 4 0 00.6-7.95A6 6 0 006.2 11 3.5 3.5 0 007 18z"></path></svg>9° Light rain</span>
+<span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#6B6259;padding:5px 10px;border-radius:999px;background:#ECE5DA"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0113 0c0 5.4-6.5 11-6.5 11z"></path><circle cx="12" cy="10" r="2.3"></circle></svg>Home</span>
+</sc-if>
+</div>
+<sc-if value="{{ hasDraftPrompt }}" hint-placeholder-val="{{ false }}">
+<div style="font:italic 400 22px/1.25 'Instrument Serif',serif;color:#6B6259">{{ draft.prompt }}</div>
+</sc-if>
+<div>
+<div style="font-size:14px;font-weight:600;margin-bottom:12px">How are you feeling?</div>
+<div style="display:flex;justify-content:space-between">
+<sc-for list="{{ moodOpts }}" as="m" hint-placeholder-count="5">
+<button onClick="{{ m.pick }}" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;padding:0;width:62px;color:#221E1A">
+<span style="width:46px;height:46px;border-radius:50%;background:{{ m.c }};box-shadow:{{ m.ring }};transition:box-shadow .15s"></span>
+<span style="font-size:12px;font-weight:{{ m.weight }}">{{ m.l }}</span>
+</button>
+</sc-for>
+</div>
+<sc-if value="{{ hasMood }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:16px">
+<sc-for list="{{ emoChips }}" as="c" hint-placeholder-count="8">
+<button onClick="{{ c.toggle }}" style="height:32px;padding:0 13px;border-radius:999px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }};font-size:13px;font-weight:500;cursor:pointer">{{ c.l }}</button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+<div style="border-top:1px solid rgba(34,30,26,.1);padding-top:16px;display:flex;flex-direction:column;gap:8px">
+<input value="{{ draft.title }}" onChange="{{ onTitle }}" placeholder="Title" style="border:none;outline:none;background:transparent;font:400 30px/1.15 'Instrument Serif',serif;color:#221E1A;padding:0">
+<textarea value="{{ draft.body }}" onChange="{{ onBody }}" placeholder="Start writing…" style="border:none;outline:none;background:transparent;resize:none;min-height:200px;font-size:17px;line-height:1.6;color:#221E1A;padding:0"></textarea>
+</div>
+<sc-if value="{{ draft.photo }}" hint-placeholder-val="{{ false }}">
+<div style="position:relative;height:190px;border-radius:18px;background:repeating-linear-gradient(135deg,#E6DED2 0 10px,#EDE6DB 10px 20px);display:flex;align-items:center;justify-content:center;font:500 12px/1 ui-monospace,Menlo,monospace;color:#6B6259">photo</div>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-size:14px;font-weight:600">Tags</div>
+<div style="display:flex;flex-wrap:wrap;gap:7px">
+<sc-for list="{{ tagChips }}" as="t" hint-placeholder-count="6">
+<button onClick="{{ t.toggle }}" style="height:32px;padding:0 12px;border-radius:999px;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.fg }};font-size:13px;cursor:pointer">#{{ t.l }}</button>
+</sc-for>
+<input value="{{ draft.tagText }}" onChange="{{ onTagText }}" onKeyDown="{{ onTagKey }}" placeholder="+ new tag" style="height:32px;width:96px;padding:0 12px;border-radius:999px;border:1px dashed rgba(34,30,26,.3);background:transparent;font-size:13px;outline:none;color:#221E1A">
+</div>
+</div>
+<button onClick="{{ togglePhoto }}" style="align-self:flex-start;height:44px;padding:0 16px;border-radius:14px;border:1px solid rgba(34,30,26,.16);background:#FBF8F2;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;cursor:pointer;color:#221E1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.7;stroke-linejoin:round"><rect x="3" y="5" width="18" height="14" rx="2.5"></rect><circle cx="9" cy="10" r="1.8"></circle><path d="M21 16l-5-5-8 8"></path></svg>{{ photoLabel }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ sEntry }}" hint-placeholder-val="{{ false }}">
+<div style="position:sticky;top:0;z-index:3;background:#F4EFE7;display:flex;align-items:center;padding:4px 10px">
+<button onClick="{{ goBack }}" style="height:44px;padding:0 8px;border:none;background:none;display:flex;align-items:center;gap:2px;font-size:16px;color:#B4573A;cursor:pointer">
+<sc-if value="{{ ios }}" hint-placeholder-val="{{ true }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M15 5l-7 7 7 7"></path></svg>{{ backName }}</sc-if>
+<sc-if value="{{ android }}" hint-placeholder-val="{{ false }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#221E1A" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M20 12H5M11 6l-6 6 6 6"></path></svg></sc-if>
+</button>
+</div>
+<div style="padding:8px 22px 48px;display:flex;flex-direction:column;gap:16px">
+<div style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6B6259">{{ ent.dateLong }}</div>
+<div style="font:400 40px/1.05 'Instrument Serif',serif;margin-top:-6px;text-wrap:pretty">{{ ent.title }}</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:#6B6259">
+<span>{{ ent.time }}</span><span>{{ ent.weather }}</span><span>{{ ent.place }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:#FBF8F2;border:1px solid rgba(34,30,26,.08)">
+<span style="width:26px;height:26px;border-radius:50%;background:{{ ent.moodC }};flex:none"></span>
+<span style="font-size:15px;font-weight:600">{{ ent.moodL }}</span>
+<span style="font-size:14px;color:#6B6259">{{ ent.emo }}</span>
+</div>
+<sc-if value="{{ ent.photo }}" hint-placeholder-val="{{ false }}">
+<div style="height:230px;border-radius:18px;background:repeating-linear-gradient(135deg,#E6DED2 0 10px,#EDE6DB 10px 20px);display:flex;align-items:center;justify-content:center;font:500 12px/1 ui-monospace,Menlo,monospace;color:#6B6259">photo</div>
+</sc-if>
+<div style="font-size:17px;line-height:1.65;white-space:pre-wrap;text-wrap:pretty">{{ ent.body }}</div>
+<div style="display:flex;flex-wrap:wrap;gap:7px">
+<sc-for list="{{ ent.tags }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.go }}" style="height:30px;padding:0 12px;border-radius:999px;border:1px solid rgba(34,30,26,.16);background:transparent;font-size:13px;color:#221E1A;cursor:pointer">#{{ t.l }}</button></sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sCal }}" hint-placeholder-val="{{ false }}">
+<div style="padding:10px 20px 120px">
+<div style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6B6259">Calendar</div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+<div style="font:400 40px/1.05 'Instrument Serif',serif">{{ monthLabel }}</div>
+<div style="display:flex;gap:6px">
+<button onClick="{{ prevMonth }}" style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(34,30,26,.14);background:#FBF8F2;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#221E1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M15 5l-7 7 7 7"></path></svg></button>
+<button onClick="{{ nextMonth }}" style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(34,30,26,.14);background:#FBF8F2;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#221E1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M9 5l7 7-7 7"></path></svg></button>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(7,1fr);margin-top:22px;font-size:11px;font-weight:600;color:#6B6259;text-align:center">
+<span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px 0;margin-top:10px;justify-items:center">
+<sc-for list="{{ cells }}" as="c" hint-placeholder-count="35">
+<button onClick="{{ c.pick }}" style="width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;background:{{ c.bg }};box-shadow:{{ c.ring }};color:{{ c.fg }};font-size:14px;font-weight:{{ c.weight }};visibility:{{ c.vis }}">{{ c.d }}</button>
+</sc-for>
+</div>
+<div style="display:flex;justify-content:space-between;margin-top:18px;padding:12px 4px;border-top:1px solid rgba(34,30,26,.1)">
+<sc-for list="{{ moodLegend }}" as="m" hint-placeholder-count="5"><span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#6B6259"><span style="width:9px;height:9px;border-radius:50%;background:{{ m.c }}"></span>{{ m.l }}</span></sc-for>
+</div>
+<div style="margin-top:14px;font:400 26px/1.1 'Instrument Serif',serif">{{ selLabel }}</div>
+<sc-for list="{{ selEntries }}" as="e" hint-placeholder-count="1">
+<button onClick="{{ e.open }}" style="width:100%;text-align:left;margin-top:12px;background:#FBF8F2;border:1px solid rgba(34,30,26,.08);border-radius:16px;color:inherit;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:14px 16px">
+<span style="display:flex;align-items:center;gap:8px;font-size:12px;color:#6B6259"><span style="width:10px;height:10px;border-radius:50%;background:{{ e.moodC }}"></span>{{ e.moodL }} · {{ e.time }}</span>
+<span style="font-size:16px;font-weight:600">{{ e.title }}</span>
+<span style="font-size:14px;line-height:1.45;color:#6B6259">{{ e.excerpt }}</span>
+</button>
+</sc-for>
+<sc-if value="{{ selEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:10px;font-size:14px;color:#6B6259">Nothing written this day.</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ sSearch }}" hint-placeholder-val="{{ false }}">
+<div style="padding:10px 20px 120px">
+<div style="font:400 40px/1.05 'Instrument Serif',serif">Search</div>
+<div style="margin-top:16px;display:flex;align-items:center;gap:10px;height:48px;padding:0 14px;border-radius:14px;background:#FBF8F2;border:1px solid rgba(34,30,26,.12);color:#6B6259">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>
+<input value="{{ query }}" onChange="{{ onQuery }}" placeholder="Words, feelings, places" style="flex:1;border:none;outline:none;background:transparent;font-size:16px;color:#221E1A">
+</div>
+<div style="margin-top:22px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6B6259">Tags</div>
+<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:10px">
+<sc-for list="{{ tagList }}" as="t" hint-placeholder-count="8">
+<button onClick="{{ t.toggle }}" style="height:34px;padding:0 12px;border-radius:999px;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.fg }};font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px">#{{ t.l }}<span style="font-size:11px;opacity:.7">{{ t.n }}</span></button>
+</sc-for>
+</div>
+<div style="margin-top:24px;margin-bottom:4px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6B6259">{{ resultLabel }}</div>
+<sc-for list="{{ results }}" as="e" hint-placeholder-count="3">
+<button onClick="{{ e.open }}" style="width:100%;text-align:left;background:none;border:none;border-top:1px solid rgba(34,30,26,.1);color:inherit;cursor:pointer;display:grid;grid-template-columns:42px 1fr;gap:14px;padding:16px 0">
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><span style="font:400 30px/1 'Instrument Serif',serif">{{ e.day }}</span><span style="font-size:10px;font-weight:600;letter-spacing:.12em;color:#6B6259">{{ e.mon }}</span></div>
+<div style="display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font-size:16px;font-weight:600">{{ e.title }}</span>
+<span style="font-size:14px;line-height:1.45;color:#6B6259">{{ e.excerpt }}</span>
+<span style="display:flex;align-items:center;gap:10px;font-size:12px;color:#6B6259;margin-top:2px"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:{{ e.moodC }}"></span>{{ e.moodL }}</span><span>{{ e.tagsStr }}</span></span>
+</div>
+</button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ sInsights }}" hint-placeholder-val="{{ false }}">
+<div style="padding:10px 20px 120px;display:flex;flex-direction:column;gap:14px">
+<div>
+<div style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6B6259">Last 30 days</div>
+<div style="font:400 40px/1.05 'Instrument Serif',serif;margin-top:8px">Insights</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+<div style="background:#FBF8F2;border:1px solid rgba(34,30,26,.08);border-radius:16px;padding:14px"><div style="font:400 32px/1 'Instrument Serif',serif">{{ ins.count }}</div><div style="font-size:12px;color:#6B6259;margin-top:6px">entries</div></div>
+<div style="background:#FBF8F2;border:1px solid rgba(34,30,26,.08);border-radius:16px;padding:14px"><div style="font:400 32px/1 'Instrument Serif',serif">{{ ins.avg }}</div><div style="font-size:12px;color:#6B6259;margin-top:6px">average mood</div></div>
+<div style="background:#FBF8F2;border:1px solid rgba(34,30,26,.08);border-radius:16px;padding:14px"><div style="font:400 32px/1 'Instrument Serif',serif">{{ ins.top }}</div><div style="font-size:12px;color:#6B6259;margin-top:6px">felt most</div></div>
+</div>
+<div style="background:#FBF8F2;border:1px solid rgba(34,30,26,.08);border-radius:18px;padding:16px">
+<div style="font-size:14px;font-weight:600">Mood by day</div>
+<div style="display:flex;align-items:flex-end;gap:3px;height:110px;margin-top:16px">
+<sc-for list="{{ bars }}" as="b" hint-placeholder-count="30"><div style="flex:1;height:{{ b.h }};background:{{ b.c }};border-radius:4px"></div></sc-for>
+</div>
+<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:#6B6259"><span>16 Oct</span><span>1 Nov</span><span>15 Nov</span></div>
+</div>
+<div style="background:#FBF8F2;border:1px solid rgba(34,30,26,.08);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px">
+<div style="font-size:14px;font-weight:600;margin-bottom:2px">Mood mix</div>
+<sc-for list="{{ mix }}" as="m" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:48px 1fr 18px;gap:10px;align-items:center;font-size:13px">
+<span style="color:#6B6259">{{ m.l }}</span>
+<div style="height:10px;border-radius:5px;background:#ECE5DA;overflow:hidden"><div style="height:100%;width:{{ m.w }};background:{{ m.c }};border-radius:5px"></div></div>
+<span style="text-align:right;font-weight:600">{{ m.n }}</span>
+</div>
+</sc-for>
+</div>
+<div style="background:#FBF8F2;border:1px solid rgba(34,30,26,.08);border-radius:18px;padding:16px">
+<div style="font-size:14px;font-weight:600">Feelings you named</div>
+<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px">
+<sc-for list="{{ emoTop }}" as="e" hint-placeholder-count="6"><span style="height:30px;padding:0 12px;border-radius:999px;background:#ECE5DA;display:flex;align-items:center;gap:6px;font-size:13px">{{ e.l }}<span style="font-weight:600">{{ e.n }}</span></span></sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sSettings }}" hint-placeholder-val="{{ false }}">
+<div style="position:sticky;top:0;z-index:3;background:#F4EFE7;display:flex;align-items:center;padding:4px 10px">
+<button onClick="{{ goBack }}" style="height:44px;padding:0 8px;border:none;background:none;display:flex;align-items:center;gap:2px;font-size:16px;color:#B4573A;cursor:pointer">
+<sc-if value="{{ ios }}" hint-placeholder-val="{{ true }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M15 5l-7 7 7 7"></path></svg>{{ backName }}</sc-if>
+<sc-if value="{{ android }}" hint-placeholder-val="{{ false }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#221E1A" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M20 12H5M11 6l-6 6 6 6"></path></svg></sc-if>
+</button>
+</div>
+<div style="padding:4px 20px 48px;display:flex;flex-direction:column;gap:10px">
+<div style="font:400 40px/1.05 'Instrument Serif',serif;margin-bottom:8px">Settings</div>
+<sc-for list="{{ setGroups }}" as="g" hint-placeholder-count="3">
+<div style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6B6259;margin:10px 4px 0">{{ g.title }}</div>
+<div style="background:#FBF8F2;border:1px solid rgba(34,30,26,.08);border-radius:18px;overflow:hidden">
+<sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="2">
+<div onClick="{{ r.toggle }}" style="display:flex;align-items:center;gap:12px;min-height:58px;padding:8px 16px;border-top:{{ r.border }};cursor:pointer;box-sizing:border-box">
+<div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">{{ r.l }}</span><span style="font-size:12px;color:#6B6259">{{ r.sub }}</span></div>
+<span style="font-size:14px;color:#6B6259">{{ r.value }}</span>
+<sc-if value="{{ r.isToggle }}" hint-placeholder-val="{{ false }}">
+<div style="width:50px;height:30px;border-radius:15px;background:{{ r.track }};padding:2px;box-sizing:border-box;transition:background .2s;flex:none"><div style="width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transform:{{ r.knob }};transition:transform .2s"></div></div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-for>
+<button onClick="{{ lockNow }}" style="margin-top:16px;height:50px;border-radius:16px;border:1px solid rgba(180,87,58,.4);background:transparent;color:#B4573A;font-size:15px;font-weight:600;cursor:pointer">Lock DIARY now</button>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{ fab }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ writeNew }}" style="position:absolute;right:18px;bottom:104px;width:58px;height:58px;border-radius:18px;border:none;background:#B4573A;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px -4px rgba(120,50,30,.45);z-index:5"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:2;stroke-linecap:round"><path d="M12 5v14M5 12h14"></path></svg></button>
+</sc-if>
+
+<sc-if value="{{ iosTabs }}" hint-placeholder-val="{{ true }}">
+<div style="flex:none;height:84px;display:grid;grid-template-columns:repeat(5,1fr);align-items:start;padding:8px 8px 0;border-top:1px solid rgba(34,30,26,.1);background:rgba(244,239,231,.94);box-sizing:border-box">
+<button onClick="{{ goToday }}" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ tc.today }};font-size:10px;font-weight:600"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.7;stroke-linecap:round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>Today</button>
+<button onClick="{{ goCal }}" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ tc.calendar }};font-size:10px;font-weight:600"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.7;stroke-linecap:round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>Calendar</button>
+<div style="display:flex;justify-content:center"><button onClick="{{ writeNew }}" style="width:50px;height:50px;margin-top:-4px;border-radius:50%;border:none;background:#B4573A;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:2;stroke-linecap:round"><path d="M12 5v14M5 12h14"></path></svg></button></div>
+<button onClick="{{ goSearch }}" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ tc.search }};font-size:10px;font-weight:600"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.7;stroke-linecap:round"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>Search</button>
+<button onClick="{{ goInsights }}" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ tc.insights }};font-size:10px;font-weight:600"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.7;stroke-linecap:round"><path d="M5 19V11M12 19V5M19 19v-6"></path></svg>Insights</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ andTabs }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;height:88px;display:grid;grid-template-columns:repeat(4,1fr);padding:12px 8px 0;background:#EDE6DB;box-sizing:border-box">
+<button onClick="{{ goToday }}" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:#221E1A;font-size:12px;font-weight:{{ tw.today }}"><span style="width:64px;height:32px;border-radius:16px;background:{{ tp.today }};display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.7;stroke-linecap:round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></span>Today</button>
+<button onClick="{{ goCal }}" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:#221E1A;font-size:12px;font-weight:{{ tw.calendar }}"><span style="width:64px;height:32px;border-radius:16px;background:{{ tp.calendar }};display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.7;stroke-linecap:round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg></span>Calendar</button>
+<button onClick="{{ goSearch }}" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:#221E1A;font-size:12px;font-weight:{{ tw.search }}"><span style="width:64px;height:32px;border-radius:16px;background:{{ tp.search }};display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.7;stroke-linecap:round"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg></span>Search</button>
+<button onClick="{{ goInsights }}" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:#221E1A;font-size:12px;font-weight:{{ tw.insights }}"><span style="width:64px;height:32px;border-radius:16px;background:{{ tp.insights }};display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.7;stroke-linecap:round"><path d="M5 19V11M12 19V5M19 19v-6"></path></svg></span>Insights</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ ios }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:50%;bottom:8px;width:134px;height:5px;margin-left:-67px;border-radius:3px;background:#221E1A;z-index:6"></div></sc-if>
+<sc-if value="{{ android }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:50%;bottom:8px;width:108px;height:4px;margin-left:-54px;border-radius:2px;background:#221E1A;opacity:.7;z-index:6"></div></sc-if>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;440px&quot;,&quot;height&quot;:&quot;920px&quot;},&quot;platform&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ios&quot;,&quot;android&quot;],&quot;default&quot;:&quot;ios&quot;,&quot;tsType&quot;:&quot;'ios'|'android'&quot;},&quot;screen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;lock&quot;,&quot;today&quot;,&quot;write&quot;,&quot;entry&quot;,&quot;calendar&quot;,&quot;search&quot;,&quot;insights&quot;,&quot;settings&quot;],&quot;default&quot;:&quot;today&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;controls&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  MOODS = [
+    { v: 1, l: 'Awful', c: 'oklch(0.56 0.07 268)' },
+    { v: 2, l: 'Low', c: 'oklch(0.72 0.06 232)' },
+    { v: 3, l: 'Okay', c: 'oklch(0.85 0.06 92)' },
+    { v: 4, l: 'Good', c: 'oklch(0.78 0.1 148)' },
+    { v: 5, l: 'Great', c: 'oklch(0.74 0.14 55)' }
+  ];
+  EMO = ['Calm', 'Joyful', 'Grateful', 'Hopeful', 'Content', 'Proud', 'Energised', 'Reflective', 'Anxious', 'Tired', 'Restless', 'Lonely'];
+  PROMPTS = [
+    'What made today feel like today?',
+    'Describe a small moment you want to remember.',
+    'What are you carrying that you could put down?',
+    'Who did you think about today, and why?',
+    'What would tomorrow-you thank you for?'
+  ];
+  SUGGEST = ['home', 'work', 'friends', 'family', 'health', 'food', 'nature', 'morning'];
+  TABS = ['today', 'calendar', 'search', 'insights'];
+  DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  DOWL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  scrollRef = React.createRef();
+
+  blank(p) { return { title: '', body: '', mood: 0, emotions: [], tags: [], photo: false, prompt: p || '', tagText: '' }; }
+  demoDraft() { return { title: 'Rain on the skylight', body: 'Woke before the alarm and just listened to it for a while. Made coffee in the small pot and didn\u2019t check my phone until nine.', mood: 4, emotions: ['Calm', 'Content'], tags: ['home', 'morning'], photo: false, prompt: 'Describe a small moment you want to remember.', tagText: '' }; }
+
+  seed() {
+    const E = (id, m, d, time, title, mood, emotions, tags, weather, place, photo, body) => ({ id, y: 2026, m, d, time, title, mood, emotions, tags, weather, place, photo, body });
+    return [
+      E('e1', 10, 15, '08:12', 'Slow Sunday', 4, ['Calm', 'Content'], ['home', 'morning'], '9° Light rain', 'Home', true, 'Rain all night and no plans. Made pancakes badly and ate them anyway.\n\nI keep promising myself a quiet day and then filling it. Today I actually didn\u2019t. Read forty pages, watered the plants, called Mum for an hour.'),
+      E('e2', 10, 14, '22:40', 'Dinner with Maya', 5, ['Joyful', 'Grateful'], ['friends', 'food'], '12° Clear', 'Lindell\u2019s, Old Town', true, 'Maya finally got the job. We split three starters and a bottle of something orange and laughed about the interview where she called the CEO by the wrong name.\n\nWalked home the long way along the river. I want more evenings like this one, unhurried and loud.'),
+      E('e3', 10, 13, '19:05', 'Deadline week', 2, ['Anxious', 'Tired'], ['work'], '10° Overcast', 'Office', false, 'Three reviews due tomorrow and I\u2019ve done one. Skipped lunch, which never helps. Writing this down so I remember that Friday-me survived last time too.'),
+      E('e4', 10, 12, '07:30', 'Morning run', 4, ['Energised', 'Proud'], ['health', 'morning'], '6° Fog', 'Riverside path', true, 'First 5k without stopping since the summer. The fog sat on the water and everything was muffled and grey. Legs heavy, head clear.'),
+      E('e5', 10, 10, '21:15', 'The letter I didn\u2019t send', 3, ['Reflective'], ['family'], '8° Cloudy', 'Home', false, 'Wrote two pages to Dad and then put them in the drawer. Maybe that\u2019s what they were for.'),
+      E('e6', 10, 8, '16:00', 'Market finds', 4, ['Content', 'Hopeful'], ['food', 'nature'], '11° Sunny', 'Saturday market', true, 'Quinces, a chipped blue bowl, and a bunch of dried hydrangeas for the hallway. The man at the honey stall remembered me.'),
+      E('e7', 10, 6, '23:10', 'Couldn\u2019t sleep', 1, ['Restless', 'Lonely'], ['night'], '5° Clear', 'Home', false, 'It\u2019s past eleven and my brain is replaying a conversation from 2019. The flat feels very big tonight.'),
+      E('e8', 10, 4, '18:20', 'First frost', 3, ['Calm'], ['nature'], '1° Frost', 'Allotment', true, 'The kale survived. The dahlias did not. Dug them up and wrapped them in newspaper for the shed.'),
+      E('e9', 10, 2, '12:00', 'New notebook, new month', 4, ['Hopeful'], ['goals'], '13° Sunny', 'Caf\u00e9 Rosa', false, 'Three things for November: run twice a week, write here most days, finish the quilt.'),
+      E('e10', 9, 30, '20:00', 'Pumpkin night', 5, ['Joyful'], ['friends'], '9° Clear', 'Sam\u2019s place', true, 'Carved seven pumpkins between five people. Mine looked like a confused owl. Sam\u2019s was terrifying.'),
+      E('e11', 9, 24, '09:40', 'Train to the coast', 4, ['Hopeful', 'Calm'], ['nature'], '14° Windy', 'Coast line', false, 'Window seat, flask of tea, nowhere to be until noon.'),
+      E('e12', 9, 19, '22:05', 'Hard conversation', 2, ['Anxious', 'Reflective'], ['work'], '10° Rain', 'Home', false, 'Told my manager I\u2019m stretched too thin. She listened. Still shaky, but lighter.')
+    ];
+  }
+
+  state = {
+    plat: null,
+    screen: (this.props && this.props.screen) || 'today',
+    back: 'today',
+    code: '',
+    entries: this.seed(),
+    openId: 'e2',
+    promptIdx: 0,
+    draft: (this.props && this.props.screen === 'write') ? this.demoDraft() : this.blank(''),
+    calM: 10,
+    calSel: 14,
+    query: '',
+    tagF: null,
+    set: { lock: true, bio: true, prompts: true, remind: true, stamp: true }
+  };
+
+  componentDidUpdate(pp, ps) {
+    if (pp.screen !== this.props.screen && this.props.screen) this.setState({ screen: this.props.screen });
+    if (ps.screen !== this.state.screen && this.scrollRef.current) this.scrollRef.current.scrollTop = 0;
+  }
+
+  go(s) { this.setState(st => ({ screen: s, back: this.TABS.includes(st.screen) ? st.screen : st.back, code: '' })); }
+  open(id) { this.setState({ openId: id }); this.go('entry'); }
+  write(p) { this.setState({ draft: this.blank(p) }); this.go('write'); }
+  setDraft(patch) { this.setState(st => ({ draft: { ...st.draft, ...patch } })); }
+  toggleIn(arr, v) { return arr.includes(v) ? arr.filter(x => x !== v) : [...arr, v]; }
+  key(k) {
+    if (k === 'del') return this.setState(st => ({ code: st.code.slice(0, -1) }));
+    if (k === 'bio') return this.setState({ screen: 'today', code: '' });
+    if (k === '' || this.state.code.length >= 4) return;
+    const code = this.state.code + k;
+    this.setState({ code });
+    if (code.length === 4) setTimeout(() => this.setState({ screen: 'today', code: '' }), 280);
+  }
+  save() {
+    const d = this.state.draft;
+    if (!d.title.trim() && !d.body.trim()) return;
+    const st = this.state.set.stamp;
+    const e = { id: 'n' + Date.now(), y: 2026, m: 10, d: 15, time: this.nowTime(), title: d.title.trim() || 'Untitled', body: d.body.trim(), mood: d.mood || 3, emotions: d.emotions, tags: d.tags, photo: d.photo, weather: st ? '9° Light rain' : '', place: st ? 'Home' : '' };
+    this.setState(s => ({ entries: [e, ...s.entries], openId: e.id, screen: 'entry', back: 'today', draft: this.blank('') }));
+  }
+  nowTime() { const n = new Date(); return String(n.getHours()).padStart(2, '0') + ':' + String(n.getMinutes()).padStart(2, '0'); }
+  sortKey(e) { return e.y * 1e8 + e.m * 1e6 + e.d * 1e4 + parseInt(e.time.replace(':', ''), 10); }
+
+  view(e) {
+    const m = this.MOODS[e.mood - 1];
+    const dt = new Date(e.y, e.m, e.d);
+    return {
+      id: e.id, title: e.title, time: e.time,
+      excerpt: e.body.length > 88 ? e.body.slice(0, 88).replace(/\s+\S*$/, '') + '\u2026' : e.body,
+      day: e.d, dow: this.DOW[dt.getDay()].toUpperCase(), mon: this.MON[e.m].slice(0, 3).toUpperCase(),
+      moodC: m.c, moodL: m.l, tagsStr: e.tags.map(t => '#' + t).join('  '),
+      open: () => this.open(e.id)
+    };
+  }
+
+  renderVals() {
+    const st = this.state;
+    const plat = st.plat || this.props.platform || 'ios';
+    const ios = plat === 'ios';
+    const s = st.screen;
+    const isTab = this.TABS.includes(s);
+    const entries = [...st.entries].sort((a, b) => this.sortKey(b) - this.sortKey(a));
+    const byDay = (y, m, d) => entries.filter(e => e.y === y && e.m === m && e.d === d);
+    const ink = '#221E1A', muted = '#8A8076';
+
+    const week = [9, 10, 11, 12, 13, 14, 15].map(d => {
+      const es = byDay(2026, 10, d);
+      const c = es.length ? this.MOODS[es[0].mood - 1].c : null;
+      return { d, dow: 'MTWTFSS'[d - 9], bg: c || 'transparent', border: c ? 'none' : (d === 15 ? '1.5px solid #221E1A' : '1.5px dashed rgba(34,30,26,.25)') };
+    });
+
+    const d = st.draft;
+    const allTags = Array.from(new Set([...this.SUGGEST, ...d.tags]));
+    const chip = (on) => ({ bg: on ? ink : 'transparent', fg: on ? '#F4EFE7' : ink, border: on ? ink : 'rgba(34,30,26,.18)' });
+
+    const ent0 = st.entries.find(e => e.id === st.openId) || entries[0];
+    const em = this.MOODS[ent0.mood - 1];
+    const edt = new Date(ent0.y, ent0.m, ent0.d);
+
+    const cal = new Date(2026, st.calM, 1);
+    const cy = cal.getFullYear(), cm = cal.getMonth();
+    const lead = (cal.getDay() + 6) % 7;
+    const dim = new Date(cy, cm + 1, 0).getDate();
+    const cells = [];
+    for (let i = 0; i < lead; i++) cells.push({ d: '', vis: 'hidden', bg: 'transparent', ring: 'none', fg: ink, weight: 400, pick: () => {} });
+    for (let day = 1; day <= dim; day++) {
+      const es = byDay(cy, cm, day);
+      const sel = day === st.calSel;
+      const today = cy === 2026 && cm === 10 && day === 15;
+      cells.push({ d: day, vis: 'visible', bg: es.length ? this.MOODS[es[0].mood - 1].c : 'transparent', ring: sel ? '0 0 0 2px #F4EFE7, 0 0 0 3.5px #221E1A' : 'none', fg: today && !es.length ? '#B4573A' : ink, weight: today || sel ? 700 : 500, pick: () => this.setState({ calSel: day }) });
+    }
+    const selDt = new Date(cy, cm, Math.min(st.calSel, dim));
+    const selEntries = byDay(cy, cm, st.calSel).map(e => this.view(e));
+
+    const q = st.query.trim().toLowerCase();
+    const results = entries.filter(e => (!st.tagF || e.tags.includes(st.tagF)) && (!q || (e.title + ' ' + e.body + ' ' + e.tags.join(' ') + ' ' + e.emotions.join(' ') + ' ' + e.place).toLowerCase().includes(q))).map(e => this.view(e));
+    const tc = {};
+    entries.forEach(e => e.tags.forEach(t => tc[t] = (tc[t] || 0) + 1));
+    const tagList = Object.keys(tc).sort((a, b) => tc[b] - tc[a]).map(t => ({ l: t, n: tc[t], ...chip(st.tagF === t), toggle: () => this.setState(x => ({ tagF: x.tagF === t ? null : t })) }));
+
+    const end = new Date(2026, 10, 15);
+    const bars = [], recent30 = [];
+    for (let i = 29; i >= 0; i--) {
+      const dt = new Date(2026, 10, 15 - i);
+      const es = byDay(dt.getFullYear(), dt.getMonth(), dt.getDate());
+      recent30.push(...es);
+      bars.push(es.length ? { h: (es[0].mood * 20) + 'px', c: this.MOODS[es[0].mood - 1].c } : { h: '4px', c: 'rgba(34,30,26,.12)' });
+    }
+    const mixN = this.MOODS.map(m => recent30.filter(e => e.mood === m.v).length);
+    const maxN = Math.max(1, ...mixN);
+    const mix = this.MOODS.slice().reverse().map(m => ({ l: m.l, c: m.c, n: mixN[m.v - 1], w: Math.round(mixN[m.v - 1] / maxN * 100) + '%' }));
+    const ec = {};
+    recent30.forEach(e => e.emotions.forEach(x => ec[x] = (ec[x] || 0) + 1));
+    const emoTop = Object.keys(ec).sort((a, b) => ec[b] - ec[a]).slice(0, 8).map(l => ({ l, n: ec[l] }));
+    const avg = recent30.length ? recent30.reduce((a, e) => a + e.mood, 0) / recent30.length : 3;
+
+    const S = st.set;
+    const tog = (k, l, sub) => ({ l, sub, isToggle: true, value: '', track: S[k] ? '#B4573A' : '#D6CDC0', knob: S[k] ? 'translateX(20px)' : 'translateX(0)', toggle: () => this.setState(x => ({ set: { ...x.set, [k]: !x.set[k] } })) });
+    const row = (l, sub, value) => ({ l, sub, value, isToggle: false, toggle: () => {} });
+    const groups = [
+      { title: 'Privacy', rows: [tog('lock', 'Passcode lock', 'Ask for passcode on open'), tog('bio', ios ? 'Face ID' : 'Fingerprint unlock', 'Use instead of passcode'), row('Lock after', '', 'Immediately')] },
+      { title: 'Writing', rows: [tog('prompts', 'Daily prompts', 'Shown on Today'), tog('remind', 'Evening reminder', 'Every day at 21:00'), tog('stamp', 'Weather & location', 'Stamp new entries automatically')] },
+      { title: 'Your data', rows: [row('Export entries', 'PDF or Markdown', ''), row('Backup', 'Encrypted, last 2 hours ago', ''), row('Version', '', '1.0')] }
+    ].map(g => ({ ...g, rows: g.rows.map((r, i) => ({ ...r, border: i ? '1px solid rgba(34,30,26,.08)' : 'none' })) }));
+
+    const subs = { 2: 'ABC', 3: 'DEF', 4: 'GHI', 5: 'JKL', 6: 'MNO', 7: 'PQRS', 8: 'TUV', 9: 'WXYZ' };
+    const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'bio', '0', 'del'].map(k => {
+      const digit = /\d/.test(k);
+      return { label: digit ? k : (k === 'del' ? '\u232B' : (S.bio ? (ios ? 'Face ID' : 'Touch') : '')), sub: subs[k] || '', size: digit ? '30px' : (k === 'del' ? '24px' : '13px'), bg: digit ? '#EAE3D8' : 'transparent', press: () => this.key(k === 'bio' && !S.bio ? '' : k) };
+    });
+
+    const tabC = k => (s === k ? ink : muted);
+    return {
+      controls: this.props.controls ?? true,
+      ios, android: !ios,
+      setIOS: () => this.setState({ plat: 'ios' }), setAndroid: () => this.setState({ plat: 'android' }),
+      iosBtnBg: ios ? '#FBF8F2' : 'transparent', andBtnBg: ios ? 'transparent' : '#FBF8F2',
+      scrollRef: this.scrollRef,
+      sLock: s === 'lock', sToday: s === 'today', sWrite: s === 'write', sEntry: s === 'entry', sCal: s === 'calendar', sSearch: s === 'search', sInsights: s === 'insights', sSettings: s === 'settings',
+      iosTabs: ios && isTab, andTabs: !ios && isTab, fab: !ios && isTab,
+      tc: { today: tabC('today'), calendar: tabC('calendar'), search: tabC('search'), insights: tabC('insights') },
+      tp: { today: s === 'today' ? '#E3CFC2' : 'transparent', calendar: s === 'calendar' ? '#E3CFC2' : 'transparent', search: s === 'search' ? '#E3CFC2' : 'transparent', insights: s === 'insights' ? '#E3CFC2' : 'transparent' },
+      tw: { today: s === 'today' ? 700 : 500, calendar: s === 'calendar' ? 700 : 500, search: s === 'search' ? 700 : 500, insights: s === 'insights' ? 700 : 500 },
+      goToday: () => this.go('today'), goCal: () => this.go('calendar'), goSearch: () => this.go('search'), goInsights: () => this.go('insights'), goSettings: () => this.go('settings'),
+      goBack: () => this.go(st.back), backName: st.back.charAt(0).toUpperCase() + st.back.slice(1),
+      writeNew: () => this.write(''),
+      lockNow: () => this.go('lock'),
+      dots: [0, 1, 2, 3].map(i => ({ bg: i < st.code.length ? ink : 'transparent' })), keys,
+      showPrompt: S.prompts, prompt: this.PROMPTS[st.promptIdx],
+      nextPrompt: () => this.setState(x => ({ promptIdx: (x.promptIdx + 1) % this.PROMPTS.length })),
+      writePrompt: () => this.write(this.PROMPTS[st.promptIdx]),
+      week, recent: entries.slice(0, 5).map(e => this.view(e)),
+      draft: d, nowTime: this.nowTime(), stampOn: S.stamp, hasDraftPrompt: !!d.prompt, hasMood: d.mood > 0,
+      moodOpts: this.MOODS.map(m => ({ c: m.c, l: m.l, weight: d.mood === m.v ? 700 : 500, ring: d.mood === m.v ? '0 0 0 3px #F4EFE7, 0 0 0 5px #221E1A' : 'none', pick: () => this.setDraft({ mood: m.v }) })),
+      emoChips: this.EMO.map(l => ({ l, ...chip(d.emotions.includes(l)), toggle: () => this.setDraft({ emotions: this.toggleIn(this.state.draft.emotions, l) }) })),
+      tagChips: allTags.map(l => ({ l, ...chip(d.tags.includes(l)), toggle: () => this.setDraft({ tags: this.toggleIn(this.state.draft.tags, l) }) })),
+      onTitle: e => this.setDraft({ title: e.target.value }),
+      onBody: e => this.setDraft({ body: e.target.value }),
+      onTagText: e => this.setDraft({ tagText: e.target.value }),
+      onTagKey: e => { if (e.key === 'Enter') { const t = this.state.draft.tagText.trim().toLowerCase().replace(/[^a-z0-9-]/g, ''); if (t) this.setDraft({ tags: [...new Set([...this.state.draft.tags, t])], tagText: '' }); } },
+      togglePhoto: () => this.setDraft({ photo: !this.state.draft.photo }), photoLabel: d.photo ? 'Remove photo' : 'Add photo',
+      saveOpacity: (d.title.trim() || d.body.trim()) ? 1 : 0.4,
+      save: () => this.save(),
+      ent: {
+        title: ent0.title, body: ent0.body, time: ent0.time, weather: ent0.weather, place: ent0.place, photo: ent0.photo,
+        dateLong: this.DOWL[edt.getDay()] + ', ' + ent0.d + ' ' + this.MON[ent0.m] + ' ' + ent0.y,
+        moodC: em.c, moodL: em.l, emo: ent0.emotions.join(' · '),
+        tags: ent0.tags.map(t => ({ l: t, go: () => { this.setState({ tagF: t, query: '' }); this.go('search'); } }))
+      },
+      monthLabel: this.MON[cm] + (cy !== 2026 ? ' ' + cy : ''),
+      prevMonth: () => this.setState(x => ({ calM: x.calM - 1, calSel: 1 })), nextMonth: () => this.setState(x => ({ calM: x.calM + 1, calSel: 1 })),
+      cells, moodLegend: this.MOODS,
+      selLabel: this.DOWL[selDt.getDay()] + ' ' + selDt.getDate() + ' ' + this.MON[cm],
+      selEntries, selEmpty: selEntries.length === 0,
+      query: st.query, onQuery: e => this.setState({ query: e.target.value }),
+      tagList, results, resultLabel: results.length + (results.length === 1 ? ' entry' : ' entries'),
+      ins: { count: recent30.length, avg: this.MOODS[Math.round(avg) - 1].l, top: emoTop.length ? emoTop[0].l : '—' },
+      bars, mix, emoTop,
+      setGroups: groups
+    };
+  }
+}
+</script>
+</body>
+</html>

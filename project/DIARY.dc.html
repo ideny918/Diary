@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#E9E3D9;font-family:'Hanken Grotesk',sans-serif;color:#221E1A}a{color:#B4573A}a:hover{color:#8E3F26}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 'Hanken Grotesk',sans-serif;color:#1a1a1a}.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 12px/1.3 'Hanken Grotesk',sans-serif;color:rgba(0,0,0,.6)}.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}.dv-next{margin:22px 0 0;font:12px/1.5 'Hanken Grotesk',sans-serif;color:rgba(0,0,0,.55)}.dv-row{font:600 11px/1 'Hanken Grotesk',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,0,0,.5);margin:40px 0 16px}</style>
+</helmet>
+<section class="dv-turn" id="t3">
+<div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname"><a class="dv-oid" href="#2b">2b</a> 기반 · 빛 팔레트 · 인덱스 탭을 하단으로</span></div>
+<div class="dv-opts">
+<div class="dv-opt" id="3a"><div class="dv-olabel"><a class="dv-oid" href="#3a">3a</a>빛 · 프로토타입</div><dc-import name="DiaryBookV2" controls="{{ true }}" screen="lock" hint-size="402px,904px"></dc-import></div>
+<div class="dv-opt" id="3b"><div class="dv-olabel"><a class="dv-oid" href="#3b">3b</a>Today</div><dc-import name="DiaryBookV2" controls="{{ false }}" screen="today" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="3c"><div class="dv-olabel"><a class="dv-oid" href="#3c">3c</a>Write</div><dc-import name="DiaryBookV2" controls="{{ false }}" screen="write" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="3d"><div class="dv-olabel"><a class="dv-oid" href="#3d">3d</a>Entry</div><dc-import name="DiaryBookV2" controls="{{ false }}" screen="entry" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="3e"><div class="dv-olabel"><a class="dv-oid" href="#3e">3e</a>Month</div><dc-import name="DiaryBookV2" controls="{{ false }}" screen="calendar" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="3f"><div class="dv-olabel"><a class="dv-oid" href="#3f">3f</a>Search</div><dc-import name="DiaryBookV2" controls="{{ false }}" screen="search" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="3g"><div class="dv-olabel"><a class="dv-oid" href="#3g">3g</a>Insight</div><dc-import name="DiaryBookV2" controls="{{ false }}" screen="insights" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="3h"><div class="dv-olabel"><a class="dv-oid" href="#3h">3h</a>Setting</div><dc-import name="DiaryBookV2" controls="{{ false }}" screen="settings" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="3i"><div class="dv-olabel"><a class="dv-oid" href="#3i">3i</a>Android · Today</div><dc-import name="DiaryBookV2" controls="{{ false }}" platform="android" screen="today" hint-size="402px,856px"></dc-import></div>
+</div>
+<p class="dv-next">다음 제안: "하단 탭에 아이콘 추가" · "<a class="dv-oid" href="#3c">3c</a> Write 화면 집중 모드" · "Week 화면 추가"</p>
+</section>
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Diary Book Kit 레이아웃 · 분위기 / 빛 팔레트</span></div>
+<p style="margin:0 0 24px;max-width:760px;font-size:14px;line-height:1.6;color:#4A433C;text-wrap:pretty">Diary Book Kit의 헤어라인 그리드, 오른쪽 인덱스 탭, 대문자 라벨과 페이지 푸터를 모바일 한 페이지로 옮겼어요. 바탕은 종이색과 검정 선만 쓰고, 팔레트 색은 기분 5단계와 포인트(선택된 탭, 저장 버튼, 체크)에만 씁니다. 두 시안은 색만 다르고 구조는 같아요.</p>
+<div class="dv-opts" style="gap:56px">
+<div class="dv-opt" id="2a"><div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>분위기 · 프로토타입</div>
+<div style="display:flex;gap:4px;align-items:center;font-size:11px;color:rgba(0,0,0,.55)"><span style="width:22px;height:14px;background:#497AB7"></span><span style="width:22px;height:14px;background:#6DA9D2"></span><span style="width:22px;height:14px;background:#AAAAC4"></span><span style="width:22px;height:14px;background:#5CC6C3"></span><span style="width:22px;height:14px;background:#E3CC81"></span><span style="margin-left:8px">기분 최악 → 최고 · 오늘 표시 #B7D1EA</span></div>
+<dc-import name="DiaryBook" palette="atmosphere" controls="{{ true }}" screen="lock" hint-size="402px,904px"></dc-import></div>
+<div class="dv-opt" id="2b"><div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>빛 · 프로토타입</div>
+<div style="display:flex;gap:4px;align-items:center;font-size:11px;color:rgba(0,0,0,.55)"><span style="width:22px;height:14px;background:#496275"></span><span style="width:22px;height:14px;background:#A693AC"></span><span style="width:22px;height:14px;background:#999393"></span><span style="width:22px;height:14px;background:#7AB6D9"></span><span style="width:22px;height:14px;background:#D5CD94"></span><span style="margin-left:8px">기분 최악 → 최고 · 오늘 표시 #C8E4CA</span></div>
+<dc-import name="DiaryBook" palette="light" controls="{{ true }}" screen="lock" hint-size="402px,904px"></dc-import></div>
+</div>
+<div class="dv-row">화면 — 분위기</div>
+<div class="dv-opts">
+<div class="dv-opt" id="2c"><div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>Today</div><dc-import name="DiaryBook" palette="atmosphere" controls="{{ false }}" screen="today" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="2d"><div class="dv-olabel"><a class="dv-oid" href="#2d">2d</a>Write</div><dc-import name="DiaryBook" palette="atmosphere" controls="{{ false }}" screen="write" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="2e"><div class="dv-olabel"><a class="dv-oid" href="#2e">2e</a>Entry</div><dc-import name="DiaryBook" palette="atmosphere" controls="{{ false }}" screen="entry" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="2f"><div class="dv-olabel"><a class="dv-oid" href="#2f">2f</a>Month</div><dc-import name="DiaryBook" palette="atmosphere" controls="{{ false }}" screen="calendar" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="2g"><div class="dv-olabel"><a class="dv-oid" href="#2g">2g</a>Search</div><dc-import name="DiaryBook" palette="atmosphere" controls="{{ false }}" screen="search" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="2h"><div class="dv-olabel"><a class="dv-oid" href="#2h">2h</a>Insight</div><dc-import name="DiaryBook" palette="atmosphere" controls="{{ false }}" screen="insights" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="2i"><div class="dv-olabel"><a class="dv-oid" href="#2i">2i</a>Setting</div><dc-import name="DiaryBook" palette="atmosphere" controls="{{ false }}" screen="settings" hint-size="402px,856px"></dc-import></div>
+</div>
+<div class="dv-row">화면 — 빛</div>
+<div class="dv-opts">
+<div class="dv-opt" id="2j"><div class="dv-olabel"><a class="dv-oid" href="#2j">2j</a>Today</div><dc-import name="DiaryBook" palette="light" controls="{{ false }}" screen="today" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="2k"><div class="dv-olabel"><a class="dv-oid" href="#2k">2k</a>Write</div><dc-import name="DiaryBook" palette="light" controls="{{ false }}" screen="write" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="2l"><div class="dv-olabel"><a class="dv-oid" href="#2l">2l</a>Entry</div><dc-import name="DiaryBook" palette="light" controls="{{ false }}" screen="entry" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="2m"><div class="dv-olabel"><a class="dv-oid" href="#2m">2m</a>Month</div><dc-import name="DiaryBook" palette="light" controls="{{ false }}" screen="calendar" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="2n"><div class="dv-olabel"><a class="dv-oid" href="#2n">2n</a>Search</div><dc-import name="DiaryBook" palette="light" controls="{{ false }}" screen="search" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="2o"><div class="dv-olabel"><a class="dv-oid" href="#2o">2o</a>Insight</div><dc-import name="DiaryBook" palette="light" controls="{{ false }}" screen="insights" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="2p"><div class="dv-olabel"><a class="dv-oid" href="#2p">2p</a>Setting</div><dc-import name="DiaryBook" palette="light" controls="{{ false }}" screen="settings" hint-size="402px,856px"></dc-import></div>
+</div>
+<p class="dv-next">다음 제안: "<a class="dv-oid" href="#2b">2b</a>로 가고 Write 화면을 펼침면처럼" · "<a class="dv-oid" href="#2a">2a</a>에 Week 화면 추가" · "인덱스 탭 대신 하단 탭으로 비교"</p>
+</section>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">DIARY — personal journal, v1</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start">
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Interactive prototype · switch iOS / Android above the phone</div><dc-import name="DiaryApp" controls="{{ true }}" screen="lock" hint-size="402px,904px"></dc-import></div>
+<div style="max-width:440px;display:flex;flex-direction:column;gap:14px;font-size:15px;line-height:1.55;padding-top:40px">
+<div style="font:400 40px/1.05 'Instrument Serif',serif">A quiet place to write.</div>
+<p style="margin:0;text-wrap:pretty">The attached design system was empty, so I set a direction: warm paper tones, Instrument Serif for the words you write and read back, Hanken Grotesk for interface text, and a single terracotta accent for actions.</p>
+<p style="margin:0;text-wrap:pretty">Mood is a 5-point scale shown as colour, with optional emotion words once a mood is picked. Those colours carry through the week strip, calendar and insights.</p>
+<div style="font-weight:600;margin-top:6px">Assumptions</div>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;color:#4A433C">
+<li>Added a Write screen, since free writing is the core of the app.</li>
+<li>Passcode: any 4 digits unlock. Face ID / fingerprint key unlocks instantly.</li>
+<li>Photos are placeholders. Weather and location stamps are sample data.</li>
+<li>Settings opens from the gear on Today; “Lock DIARY now” returns to the lock screen.</li>
+<li>Android swaps the centre Write tab for a FAB and uses Material-style nav pills.</li>
+</ul>
+</div>
+</div>
+<div class="dv-row">Screens — iOS</div>
+<div class="dv-opts">
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Lock</div><dc-import name="DiaryApp" controls="{{ false }}" platform="ios" screen="lock" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Today</div><dc-import name="DiaryApp" controls="{{ false }}" platform="ios" screen="today" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="1d"><div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Write</div><dc-import name="DiaryApp" controls="{{ false }}" platform="ios" screen="write" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="1e"><div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>Entry</div><dc-import name="DiaryApp" controls="{{ false }}" platform="ios" screen="entry" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="1f"><div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>Calendar</div><dc-import name="DiaryApp" controls="{{ false }}" platform="ios" screen="calendar" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="1g"><div class="dv-olabel"><a class="dv-oid" href="#1g">1g</a>Search &amp; tags</div><dc-import name="DiaryApp" controls="{{ false }}" platform="ios" screen="search" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="1h"><div class="dv-olabel"><a class="dv-oid" href="#1h">1h</a>Insights</div><dc-import name="DiaryApp" controls="{{ false }}" platform="ios" screen="insights" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="1i"><div class="dv-olabel"><a class="dv-oid" href="#1i">1i</a>Settings</div><dc-import name="DiaryApp" controls="{{ false }}" platform="ios" screen="settings" hint-size="402px,856px"></dc-import></div>
+</div>
+<div class="dv-row">Screens — Android</div>
+<div class="dv-opts">
+<div class="dv-opt" id="1j"><div class="dv-olabel"><a class="dv-oid" href="#1j">1j</a>Today</div><dc-import name="DiaryApp" controls="{{ false }}" platform="android" screen="today" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="1k"><div class="dv-olabel"><a class="dv-oid" href="#1k">1k</a>Write</div><dc-import name="DiaryApp" controls="{{ false }}" platform="android" screen="write" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="1l"><div class="dv-olabel"><a class="dv-oid" href="#1l">1l</a>Calendar</div><dc-import name="DiaryApp" controls="{{ false }}" platform="android" screen="calendar" hint-size="402px,856px"></dc-import></div>
+<div class="dv-opt" id="1m"><div class="dv-olabel"><a class="dv-oid" href="#1m">1m</a>Insights</div><dc-import name="DiaryApp" controls="{{ false }}" platform="android" screen="insights" hint-size="402px,856px"></dc-import></div>
+</div>
+<p class="dv-next">Try next: "a darker night-mode version of <a class="dv-oid" href="#1c">1c</a>" · "try a full-screen focus mode for <a class="dv-oid" href="#1d">1d</a>" · "add onboarding before <a class="dv-oid" href="#1b">1b</a>"</p>
+</section>
+</x-dc>
+</body>
+</html>

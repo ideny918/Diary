@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,300;6..12,400;6..12,500;6..12,600;6..12,700&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#e7e8eb}a{color:#000}a:hover{color:rgba(0,0,0,.52)}input,textarea,button{font-family:inherit;color:inherit}input::placeholder,textarea::placeholder{color:rgba(0,0,0,.3)}input:focus,textarea:focus{outline:none}</style>
+</helmet>
+<div style="display:flex;flex-direction:column;align-items:center;gap:14px;font-family:'Avenir Next','Avenir','Nunito Sans','Apple SD Gothic Neo','Helvetica Neue',Arial,sans-serif;color:#000;-webkit-font-smoothing:antialiased">
+<sc-if value="{{ controls }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;border:1px solid #000;background:#fffdf8">
+<button onClick="{{ setIOS }}" style="border:none;cursor:pointer;padding:6px 16px;font-size:12.5px;background:{{ iosBtnBg }};color:{{ iosBtnFg }}">iOS</button>
+<button onClick="{{ setAndroid }}" style="border:none;cursor:pointer;padding:6px 16px;font-size:12.5px;background:{{ andBtnBg }};color:{{ andBtnFg }}">Android</button>
+</div>
+</sc-if>
+<div style="width:390px;height:844px;padding:6px;background:#1B1917;border-radius:58px;box-shadow:0 30px 60px -20px rgba(0,0,0,.3)">
+<div style="width:390px;height:844px;border-radius:52px;overflow:hidden;position:relative;background:#e7e8eb;display:flex;flex-direction:column">
+
+<sc-if value="{{ ios }}" hint-placeholder-val="{{ true }}">
+<div style="height:54px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:6px 30px 0 48px;position:relative">
+<span style="font-size:16px;font-weight:600">9:41</span>
+<div style="position:absolute;left:50%;top:11px;width:122px;height:35px;margin-left:-61px;background:#000;border-radius:20px"></div>
+<div style="display:flex;align-items:center;gap:6px">
+<svg width="18" height="12" viewBox="0 0 18 12" fill="#000"><rect x="0" y="8" width="3" height="4" rx="1"></rect><rect x="5" y="5.5" width="3" height="6.5" rx="1"></rect><rect x="10" y="3" width="3" height="9" rx="1"></rect><rect x="15" y="0" width="3" height="12" rx="1"></rect></svg>
+<div style="width:25px;height:12px;border:1.5px solid rgba(0,0,0,.45);border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:75%;height:100%;background:#000;border-radius:1.5px"></div></div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ android }}" hint-placeholder-val="{{ false }}">
+<div style="height:40px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:4px 24px 0;position:relative">
+<span style="font-size:14px;font-weight:500">9:41</span>
+<div style="position:absolute;left:50%;top:12px;width:14px;height:14px;margin-left:-7px;background:#000;border-radius:50%"></div>
+<div style="display:flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 14 14" fill="#000"><path d="M14 0v14H0z"></path></svg><div style="width:9px;height:15px;border-radius:2px;background:#000"></div></div>
+</div>
+</sc-if>
+
+<div style="flex:1;min-height:0;display:flex;padding:6px 0 34px">
+<div style="flex:1;min-width:0;position:relative;background:#fffdf8;border-radius:0 6px 6px 0;box-shadow:1px 1px 0 rgba(0,0,0,.13),6px 8px 24px rgba(0,0,0,.08);display:flex;flex-direction:column;overflow:hidden">
+<div style="position:absolute;left:0;top:0;bottom:0;width:22px;background:linear-gradient(to right,rgba(0,0,0,.07),rgba(0,0,0,0));pointer-events:none;z-index:4"></div>
+
+<sc-if value="{{ sLock }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;padding:20px 20px 12px 26px;box-sizing:border-box">
+<div style="display:flex;align-items:baseline;gap:12px;min-height:40px;border-bottom:1px solid #000;padding-bottom:8px"><span style="font-size:28px;font-weight:700;line-height:1;letter-spacing:-.01em">DIARY</span><span style="font-size:13px;font-weight:300;color:rgba(0,0,0,.52);letter-spacing:.06em">2026</span></div>
+<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:28px;padding-bottom:18px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+<span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Passcode</span>
+<div style="display:flex;gap:16px"><sc-for list="{{ dots }}" as="d" hint-placeholder-count="4"><div style="width:14px;height:14px;border:1px solid #000;background:{{ d.bg }};transition:background .15s"></div></sc-for></div>
+<span style="font-size:12.5px;color:rgba(0,0,0,.52)">암호를 입력하세요</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #000;border-left:1px solid #000">
+<sc-for list="{{ keys }}" as="k" hint-placeholder-count="12">
+<button onClick="{{ k.press }}" style="height:66px;border:none;border-right:1px solid #000;border-bottom:1px solid #000;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px" style-active="background:#f5f5f6">
+<span style="font-size:{{ k.size }};font-weight:500;letter-spacing:{{ k.ls }};font-variant-numeric:tabular-nums">{{ k.label }}</span>
+<span style="font-size:8.5px;letter-spacing:.16em;color:rgba(0,0,0,.52)">{{ k.sub }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:10.5px;letter-spacing:.14em;color:rgba(0,0,0,.52);text-transform:uppercase"><span>Locked</span><span>아무 숫자 4개</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sToday }}" hint-placeholder-val="{{ true }}">
+<div style="height:100%;display:flex;flex-direction:column">
+<div style="padding:20px 18px 0 26px"><div style="display:flex;align-items:baseline;gap:12px;min-height:40px;border-bottom:1px solid #000;padding-bottom:8px">
+<span style="font-size:28px;font-weight:700;line-height:1;letter-spacing:-.01em">11.15</span><span style="font-size:13px;font-weight:300;color:rgba(0,0,0,.52);letter-spacing:.06em">SUN · 2026</span>
+<button onClick="{{ writeNew }}" style="margin-left:auto;align-self:center;height:34px;padding:0 12px;border:1px solid #000;background:transparent;font-size:12.5px;cursor:pointer" style-hover="background:#000;color:#fffdf8">+ 쓰기</button>
+</div></div>
+<div ref="{{ scrollRef }}" style="flex:1;min-height:0;overflow-y:auto;padding:14px 18px 20px 26px;scrollbar-width:none;display:flex;flex-direction:column;gap:22px">
+<sc-if value="{{ showPrompt }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Today's prompt</span><button onClick="{{ nextPrompt }}" style="border:none;background:none;cursor:pointer;font-size:11.5px;color:rgba(0,0,0,.52);padding:6px 0" style-hover="color:#000">다른 질문 ↻</button></div>
+<div style="font-size:19px;line-height:1.45;font-weight:500;letter-spacing:-.01em;text-wrap:pretty;min-height:56px">{{ prompt }}</div>
+<button onClick="{{ writePrompt }}" style="height:42px;border:none;background:{{ P.point }};color:#fffdf8;font-size:12.5px;letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 14px"><span>이 질문으로 쓰기</span><span>→</span></button>
+</div>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">This week</span>
+<div style="display:grid;grid-template-columns:repeat(7,1fr);border-top:1px solid #000;border-left:1px solid #000">
+<sc-for list="{{ week }}" as="w" hint-placeholder-count="7">
+<div style="height:56px;border-right:1px solid #000;border-bottom:1px solid #000;background:{{ w.bg }};color:{{ w.fg }};padding:5px 6px;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box">
+<span style="font-size:9px;letter-spacing:.14em;opacity:.7">{{ w.dow }}</span>
+<span style="font-size:13px;font-variant-numeric:tabular-nums;font-weight:{{ w.weight }};text-decoration:{{ w.deco }};text-underline-offset:3px">{{ w.d }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;flex-direction:column">
+<span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52);padding-bottom:6px;border-bottom:1px solid #000">Recent</span>
+<sc-for list="{{ recent }}" as="e" hint-placeholder-count="4">
+<button onClick="{{ e.open }}" style="width:100%;text-align:left;background:none;border:none;border-bottom:1px solid #000;cursor:pointer;display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;padding:10px 2px" style-hover="background:#f5f5f6">
+<span style="display:flex;flex-direction:column;gap:3px"><b style="font-size:18px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums">{{ e.dd }}</b><span style="font-size:10px;letter-spacing:.16em;color:rgba(0,0,0,.52)">{{ e.dow }}</span></span>
+<span style="display:flex;flex-direction:column;gap:3px;min-width:0">
+<span style="font-size:14px;font-weight:600">{{ e.title }}</span>
+<span style="font-size:12.5px;line-height:1.5;color:rgba(0,0,0,.52)">{{ e.excerpt }}</span>
+<span style="display:flex;align-items:center;gap:8px;font-size:11.5px;margin-top:2px"><span style="width:9px;height:9px;background:{{ e.moodC }};border:1px solid rgba(0,0,0,.13)"></span>{{ e.moodL }}<span style="color:rgba(0,0,0,.52)">{{ e.tagsStr }}</span></span>
+</span>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;padding:8px 18px 12px 26px;font-size:10.5px;letter-spacing:.14em;color:rgba(0,0,0,.52);text-transform:uppercase"><span>Nov 2026</span><span>Today</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sWrite }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column">
+<div style="padding:20px 18px 0 22px"><div style="display:flex;align-items:baseline;gap:10px;min-height:40px;border-bottom:1px solid #000;padding-bottom:8px">
+<button onClick="{{ goBack }}" aria-label="뒤로" style="border:none;background:none;cursor:pointer;font-size:20px;line-height:1;padding:4px 4px 4px 0;align-self:center">←</button>
+<span style="font-size:28px;font-weight:700;line-height:1;letter-spacing:-.01em">New</span><span style="font-size:13px;font-weight:300;color:rgba(0,0,0,.52);letter-spacing:.06em">11.15 · SUN</span>
+<button onClick="{{ save }}" style="margin-left:auto;align-self:center;height:34px;padding:0 16px;border:none;background:{{ P.point }};color:#fffdf8;font-size:12.5px;letter-spacing:.06em;cursor:pointer;opacity:{{ saveOpacity }}">저장</button>
+</div></div>
+<div ref="{{ scrollRef }}" style="flex:1;min-height:0;overflow-y:auto;padding:4px 18px 24px 26px;scrollbar-width:none;display:flex;flex-direction:column;gap:20px">
+<sc-if value="{{ stampOn }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.13);font-size:13px"><span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Time</span><span style="font-variant-numeric:tabular-nums">{{ nowTime }}</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.13);font-size:13px"><span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Weather</span><span>9° 비</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.13);font-size:13px"><span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Place</span><span>집</span></div>
+</div>
+</sc-if>
+<sc-if value="{{ hasDraftPrompt }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Prompt</span><span style="font-size:15px;line-height:1.5;font-weight:500">{{ draft.prompt }}</span></div>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Mood</span>
+<div style="display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid #000;border-left:1px solid #000">
+<sc-for list="{{ moodOpts }}" as="m" hint-placeholder-count="5">
+<button onClick="{{ m.pick }}" style="height:66px;border:none;border-right:1px solid #000;border-bottom:1px solid #000;background:{{ m.bg }};color:{{ m.fg }};cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:background .15s">
+<span style="width:16px;height:16px;background:{{ m.c }};border:1px solid {{ m.swBorder }}"></span>
+<span style="font-size:11.5px;font-weight:{{ m.weight }}">{{ m.l }}</span>
+</button>
+</sc-for>
+</div>
+<sc-if value="{{ hasMood }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+<span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Feelings</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<sc-for list="{{ emoChips }}" as="c" hint-placeholder-count="8"><button onClick="{{ c.toggle }}" style="height:30px;padding:0 11px;border-radius:999px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }};font-size:12px;cursor:pointer">{{ c.l }}</button></sc-for>
+</div>
+</div>
+</sc-if>
+</div>
+<div style="display:flex;flex-direction:column">
+<input value="{{ draft.title }}" onChange="{{ onTitle }}" placeholder="제목" style="border:none;border-bottom:1px solid #000;background:transparent;font-size:20px;font-weight:700;letter-spacing:-.01em;padding:6px 0 8px">
+<textarea value="{{ draft.body }}" onChange="{{ onBody }}" placeholder="오늘은 어땠나요?" style="border:none;resize:none;min-height:224px;font-size:14px;line-height:28px;padding:0;background:transparent;background-image:repeating-linear-gradient(to bottom,transparent 0 27px,rgba(0,0,0,.13) 27px 28px)"></textarea>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Photo</span>
+<sc-if value="{{ noPhoto }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ togglePhoto }}" style="height:96px;border:1px dashed rgba(0,0,0,.25);background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(0,0,0,.52);font-size:10.5px;letter-spacing:.14em">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.2"><rect x="3" y="5" width="18" height="14"></rect><circle cx="9" cy="10" r="1.8"></circle><path d="M21 16l-5-5-8 8"></path></svg>ADD PHOTO</button>
+</sc-if>
+<sc-if value="{{ draft.photo }}" hint-placeholder-val="{{ false }}">
+<div style="position:relative;height:170px;background:repeating-linear-gradient(135deg,transparent 0 6px,#ecece9 6px 7px);border:1px solid rgba(0,0,0,.13);display:flex;align-items:center;justify-content:center;font:500 11px/1 ui-monospace,Menlo,monospace;color:rgba(0,0,0,.52)">photo<button onClick="{{ togglePhoto }}" style="position:absolute;top:6px;right:6px;height:28px;padding:0 10px;border:1px solid #000;background:#fffdf8;font-size:11px;cursor:pointer">삭제</button></div>
+</sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Tags</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<sc-for list="{{ tagChips }}" as="t" hint-placeholder-count="6"><button onClick="{{ t.toggle }}" style="height:30px;padding:0 11px;border-radius:999px;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.fg }};font-size:12px;cursor:pointer">#{{ t.l }}</button></sc-for>
+<input value="{{ draft.tagText }}" onChange="{{ onTagText }}" onKeyDown="{{ onTagKey }}" placeholder="+ 새 태그" style="height:30px;width:84px;padding:0 11px;border-radius:999px;border:1px dashed rgba(0,0,0,.3);background:transparent;font-size:12px">
+</div>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;padding:8px 18px 12px 26px;font-size:10.5px;letter-spacing:.14em;color:rgba(0,0,0,.52);text-transform:uppercase"><span>Draft</span><span>11.15</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sEntry }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column">
+<div style="padding:20px 18px 0 22px"><div style="display:flex;align-items:baseline;gap:10px;min-height:40px;border-bottom:1px solid #000;padding-bottom:8px">
+<button onClick="{{ goBack }}" aria-label="뒤로" style="border:none;background:none;cursor:pointer;font-size:20px;line-height:1;padding:4px 4px 4px 0;align-self:center">←</button>
+<span style="font-size:28px;font-weight:700;line-height:1;letter-spacing:-.01em">{{ ent.md }}</span><span style="font-size:13px;font-weight:300;color:rgba(0,0,0,.52);letter-spacing:.06em">{{ ent.sub }}</span>
+</div></div>
+<div ref="{{ scrollRef }}" style="flex:1;min-height:0;overflow-y:auto;padding:16px 18px 24px 26px;scrollbar-width:none;display:flex;flex-direction:column;gap:16px">
+<div style="font-size:22px;font-weight:700;line-height:1.3;letter-spacing:-.01em;text-wrap:pretty">{{ ent.title }}</div>
+<div style="display:flex;flex-direction:column;border-top:1px solid #000">
+<div style="display:grid;grid-template-columns:72px 1fr;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.13);font-size:13px"><span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Mood</span><span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:{{ ent.moodC }};border:1px solid rgba(0,0,0,.13)"></span><b style="font-weight:600">{{ ent.moodL }}</b><span style="color:rgba(0,0,0,.52)">{{ ent.emo }}</span></span></div>
+<div style="display:grid;grid-template-columns:72px 1fr;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.13);font-size:13px"><span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Weather</span><span>{{ ent.weather }}</span></div>
+<div style="display:grid;grid-template-columns:72px 1fr;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.13);font-size:13px"><span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Place</span><span>{{ ent.place }}</span></div>
+</div>
+<sc-if value="{{ ent.photo }}" hint-placeholder-val="{{ false }}">
+<div style="height:200px;background:repeating-linear-gradient(135deg,transparent 0 6px,#ecece9 6px 7px);border:1px solid rgba(0,0,0,.13);display:flex;align-items:center;justify-content:center;font:500 11px/1 ui-monospace,Menlo,monospace;color:rgba(0,0,0,.52)">photo</div>
+</sc-if>
+<div style="font-size:14px;line-height:1.8;white-space:pre-wrap;text-wrap:pretty">{{ ent.body }}</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<sc-for list="{{ ent.tags }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.go }}" style="height:30px;padding:0 11px;border-radius:999px;border:1px solid #000;background:transparent;font-size:12px;cursor:pointer" style-hover="background:#000;color:#fffdf8">#{{ t.l }}</button></sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;padding:8px 18px 12px 26px;font-size:10.5px;letter-spacing:.14em;color:rgba(0,0,0,.52);text-transform:uppercase"><span>Diary · {{ ent.y }}</span><span>{{ ent.md }}</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sCal }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column">
+<div style="padding:20px 18px 0 26px"><div style="display:flex;align-items:baseline;gap:10px;min-height:40px;border-bottom:1px solid #000;padding-bottom:8px">
+<span style="font-size:28px;font-weight:700;line-height:1;letter-spacing:-.01em">{{ monthLabel }}</span><span style="font-size:13px;font-weight:300;color:rgba(0,0,0,.52);letter-spacing:.06em">{{ calYear }}</span>
+<div style="margin-left:auto;align-self:center;display:flex;align-items:center;gap:8px">
+<button onClick="{{ prevMonth }}" aria-label="이전 달" style="border:none;background:none;cursor:pointer;height:34px;padding:0 2px;display:flex;align-items:center;gap:5px;font-size:10px;letter-spacing:.16em"><span style="font-size:7px">◀</span>PREV</button>
+<span style="width:1px;height:12px;background:#000;opacity:.7"></span>
+<button onClick="{{ nextMonth }}" aria-label="다음 달" style="border:none;background:none;cursor:pointer;height:34px;padding:0 2px;display:flex;align-items:center;gap:5px;font-size:10px;letter-spacing:.16em">NEXT<span style="font-size:7px">▶</span></button>
+</div>
+</div></div>
+<div ref="{{ scrollRef }}" style="flex:1;min-height:0;overflow-y:auto;padding:12px 18px 20px 26px;scrollbar-width:none;display:flex;flex-direction:column;gap:14px">
+<div>
+<div style="display:grid;grid-template-columns:repeat(7,1fr);font-size:10px;letter-spacing:.16em;font-weight:500;text-align:center;padding-bottom:6px"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+<div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid #000;border-left:1px solid #000">
+<sc-for list="{{ cells }}" as="c" hint-placeholder-count="35">
+<button onClick="{{ c.pick }}" style="height:50px;border:none;border-right:1px solid #000;border-bottom:1px solid #000;background:{{ c.bg }};color:{{ c.fg }};box-shadow:{{ c.ring }};cursor:pointer;text-align:left;padding:5px 6px;display:flex;align-items:flex-start;font-size:11px;font-variant-numeric:tabular-nums;font-weight:{{ c.weight }};text-decoration:{{ c.deco }};text-underline-offset:3px">{{ c.d }}</button>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between">
+<sc-for list="{{ moodLegend }}" as="m" hint-placeholder-count="5"><span style="display:flex;align-items:center;gap:5px;font-size:11px"><span style="width:9px;height:9px;background:{{ m.c }};border:1px solid rgba(0,0,0,.13)"></span>{{ m.l }}</span></sc-for>
+</div>
+<div style="display:flex;flex-direction:column">
+<div style="display:flex;align-items:baseline;gap:8px;padding-bottom:6px;border-bottom:1px solid #000"><b style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums">{{ selMd }}</b><span style="font-size:10px;letter-spacing:.16em;color:rgba(0,0,0,.52)">{{ selDow }}</span></div>
+<sc-for list="{{ selEntries }}" as="e" hint-placeholder-count="1">
+<button onClick="{{ e.open }}" style="width:100%;text-align:left;background:none;border:none;border-bottom:1px solid rgba(0,0,0,.13);cursor:pointer;display:flex;flex-direction:column;gap:3px;padding:10px 2px" style-hover="background:#f5f5f6">
+<span style="display:flex;align-items:center;gap:8px;font-size:11.5px"><span style="width:9px;height:9px;background:{{ e.moodC }};border:1px solid rgba(0,0,0,.13)"></span>{{ e.moodL }}<span style="color:rgba(0,0,0,.52);font-variant-numeric:tabular-nums">{{ e.time }}</span></span>
+<span style="font-size:14px;font-weight:600">{{ e.title }}</span>
+<span style="font-size:12.5px;line-height:1.5;color:rgba(0,0,0,.52)">{{ e.excerpt }}</span>
+</button>
+</sc-for>
+<sc-if value="{{ selEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin:10px 0 0;font-size:12.5px;color:rgba(0,0,0,.52)">이 날은 기록이 없어요.</p></sc-if>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;padding:8px 18px 12px 26px;font-size:10.5px;letter-spacing:.14em;color:rgba(0,0,0,.52);text-transform:uppercase"><span>Month</span><span>{{ calYear }}</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sSearch }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column">
+<div style="padding:20px 18px 0 26px"><div style="display:flex;align-items:baseline;gap:12px;min-height:40px;border-bottom:1px solid #000;padding-bottom:8px">
+<span style="font-size:28px;font-weight:700;line-height:1;letter-spacing:-.01em">Search</span><span style="font-size:13px;font-weight:300;color:rgba(0,0,0,.52);letter-spacing:.06em">{{ resultCount }}</span>
+</div></div>
+<div ref="{{ scrollRef }}" style="flex:1;min-height:0;overflow-y:auto;padding:12px 18px 20px 26px;scrollbar-width:none;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;align-items:center;gap:8px;border-bottom:1px solid #000;padding:6px 0">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.4"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>
+<input value="{{ query }}" onChange="{{ onQuery }}" placeholder="단어, 감정, 장소" style="flex:1;border:none;background:transparent;font-size:15px;height:32px">
+</div>
+<div style="display:flex;flex-direction:column">
+<span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52);padding-bottom:6px">Tags</span>
+<sc-for list="{{ tagList }}" as="t" hint-placeholder-count="8">
+<button onClick="{{ t.toggle }}" style="display:grid;grid-template-columns:24px auto minmax(12px,1fr) auto;gap:8px;align-items:center;height:34px;padding:0 6px;border:none;background:{{ t.bg }};color:{{ t.fg }};cursor:pointer;text-align:left">
+<span style="font-size:11px;opacity:.6;font-variant-numeric:tabular-nums">{{ t.no }}</span><span style="font-size:13px">#{{ t.l }}</span><span style="border-bottom:1px dotted currentColor;opacity:.35;align-self:center"></span><span style="font-size:12px;font-variant-numeric:tabular-nums">{{ t.n }}</span>
+</button>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column">
+<span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52);padding-bottom:6px;border-bottom:1px solid #000">{{ resultLabel }}</span>
+<sc-for list="{{ results }}" as="e" hint-placeholder-count="3">
+<button onClick="{{ e.open }}" style="width:100%;text-align:left;background:none;border:none;border-bottom:1px solid #000;cursor:pointer;display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;padding:10px 2px" style-hover="background:#f5f5f6">
+<span style="display:flex;flex-direction:column;gap:3px"><b style="font-size:16px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums">{{ e.md }}</b><span style="font-size:10px;letter-spacing:.16em;color:rgba(0,0,0,.52)">{{ e.dow }}</span></span>
+<span style="display:flex;flex-direction:column;gap:3px;min-width:0">
+<span style="font-size:14px;font-weight:600">{{ e.title }}</span>
+<span style="font-size:12.5px;line-height:1.5;color:rgba(0,0,0,.52)">{{ e.excerpt }}</span>
+<span style="display:flex;align-items:center;gap:8px;font-size:11.5px;margin-top:2px"><span style="width:9px;height:9px;background:{{ e.moodC }};border:1px solid rgba(0,0,0,.13)"></span>{{ e.moodL }}<span style="color:rgba(0,0,0,.52)">{{ e.tagsStr }}</span></span>
+</span>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;padding:8px 18px 12px 26px;font-size:10.5px;letter-spacing:.14em;color:rgba(0,0,0,.52);text-transform:uppercase"><span>Search</span><span>{{ tagFLabel }}</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sInsights }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column">
+<div style="padding:20px 18px 0 26px"><div style="display:flex;align-items:baseline;gap:12px;min-height:40px;border-bottom:1px solid #000;padding-bottom:8px">
+<span style="font-size:28px;font-weight:700;line-height:1;letter-spacing:-.01em">Insight</span><span style="font-size:13px;font-weight:300;color:rgba(0,0,0,.52);letter-spacing:.06em">30 DAYS</span>
+</div></div>
+<div ref="{{ scrollRef }}" style="flex:1;min-height:0;overflow-y:auto;padding:12px 18px 20px 26px;scrollbar-width:none;display:flex;flex-direction:column;gap:22px">
+<div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #000;border-left:1px solid #000">
+<div style="border-right:1px solid #000;border-bottom:1px solid #000;padding:10px 10px 8px;display:flex;flex-direction:column;gap:6px"><b style="font-size:24px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums">{{ ins.count }}</b><span style="font-size:9.5px;letter-spacing:.14em;color:rgba(0,0,0,.52)">ENTRIES</span></div>
+<div style="border-right:1px solid #000;border-bottom:1px solid #000;padding:10px 10px 8px;display:flex;flex-direction:column;gap:6px"><b style="font-size:24px;font-weight:500;line-height:1">{{ ins.avg }}</b><span style="font-size:9.5px;letter-spacing:.14em;color:rgba(0,0,0,.52)">AVG MOOD</span></div>
+<div style="border-right:1px solid #000;border-bottom:1px solid #000;padding:10px 10px 8px;display:flex;flex-direction:column;gap:6px"><b style="font-size:24px;font-weight:500;line-height:1">{{ ins.top }}</b><span style="font-size:9.5px;letter-spacing:.14em;color:rgba(0,0,0,.52)">FELT MOST</span></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Mood by day</span>
+<div style="display:grid;grid-template-columns:repeat(15,1fr);border-top:1px solid #000;border-left:1px solid #000">
+<sc-for list="{{ heat }}" as="h" hint-placeholder-count="30"><div style="aspect-ratio:1;border-right:1px solid #000;border-bottom:1px solid #000;background:{{ h.c }}"></div></sc-for>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:10px;letter-spacing:.1em;color:rgba(0,0,0,.52);font-variant-numeric:tabular-nums"><span>10.17</span><span>11.01</span><span>11.15</span></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52)">Mood mix</span>
+<sc-for list="{{ mix }}" as="m" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:36px 1fr 16px;gap:10px;align-items:center;font-size:12px">
+<span>{{ m.l }}</span>
+<div style="height:12px;border:1px solid #000;box-sizing:border-box"><div style="height:100%;width:{{ m.w }};background:{{ m.c }}"></div></div>
+<span style="text-align:right;font-variant-numeric:tabular-nums">{{ m.n }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column">
+<span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52);padding-bottom:6px">Feelings</span>
+<sc-for list="{{ emoTop }}" as="e" hint-placeholder-count="6">
+<div style="display:grid;grid-template-columns:24px auto minmax(12px,1fr) auto;gap:8px;align-items:center;height:30px;padding:0 6px">
+<span style="font-size:11px;color:rgba(0,0,0,.52);font-variant-numeric:tabular-nums">{{ e.no }}</span><span style="font-size:13px">{{ e.l }}</span><span style="border-bottom:1px dotted rgba(0,0,0,.35)"></span><span style="font-size:12px;font-variant-numeric:tabular-nums">{{ e.n }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;padding:8px 18px 12px 26px;font-size:10.5px;letter-spacing:.14em;color:rgba(0,0,0,.52);text-transform:uppercase"><span>Insight</span><span>10.17 – 11.15</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sSettings }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column">
+<div style="padding:20px 18px 0 26px"><div style="display:flex;align-items:baseline;gap:12px;min-height:40px;border-bottom:1px solid #000;padding-bottom:8px">
+<span style="font-size:28px;font-weight:700;line-height:1;letter-spacing:-.01em">Setting</span>
+</div></div>
+<div ref="{{ scrollRef }}" style="flex:1;min-height:0;overflow-y:auto;padding:4px 18px 20px 26px;scrollbar-width:none;display:flex;flex-direction:column">
+<sc-for list="{{ setGroups }}" as="g" hint-placeholder-count="3">
+<span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.52);padding:18px 0 4px">{{ g.title }}</span>
+<sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid rgba(0,0,0,.13)">
+<div style="display:flex;flex-direction:column;gap:1px"><b style="font-size:13.5px;font-weight:600">{{ r.l }}</b><span style="font-size:12px;color:rgba(0,0,0,.52)">{{ r.sub }}</span></div>
+<sc-if value="{{ r.isToggle }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;border:1px solid #000;flex:none">
+<button onClick="{{ r.setOn }}" style="border:none;padding:6px 11px;font-size:11px;letter-spacing:.08em;cursor:pointer;background:{{ r.onBg }};color:{{ r.onFg }}">ON</button>
+<button onClick="{{ r.setOff }}" style="border:none;padding:6px 11px;font-size:11px;letter-spacing:.08em;cursor:pointer;background:{{ r.offBg }};color:{{ r.offFg }}">OFF</button>
+</div>
+</sc-if>
+<span style="font-size:12.5px;color:rgba(0,0,0,.52)">{{ r.value }}</span>
+</div>
+</sc-for>
+</sc-for>
+<button onClick="{{ lockNow }}" style="margin-top:24px;height:44px;border:1px solid #000;background:transparent;font-size:12.5px;letter-spacing:.06em;cursor:pointer" style-hover="background:#000;color:#fffdf8">지금 잠그기</button>
+</div>
+<div style="display:flex;justify-content:space-between;padding:8px 18px 12px 26px;font-size:10.5px;letter-spacing:.14em;color:rgba(0,0,0,.52);text-transform:uppercase"><span>Setting</span><span>v1.0</span></div>
+</div>
+</sc-if>
+</div>
+
+<sc-if value="{{ showTabs }}" hint-placeholder-val="{{ true }}">
+<div style="width:30px;flex:none;display:flex;flex-direction:column;gap:4px;padding:10px 0 20px">
+<button onClick="{{ goToday }}" aria-label="오늘로" style="width:28px;height:26px;flex:none;border:none;border-radius:0 5px 5px 0;background:{{ P.point }};cursor:pointer;margin-bottom:8px"></button>
+<button onClick="{{ goToday }}" style="writing-mode:vertical-rl;font-size:10px;letter-spacing:.16em;text-transform:uppercase;width:28px;height:78px;flex:none;padding:0;border:1px solid {{ tb.today.bd }};border-left:0;border-radius:0 5px 5px 0;background:{{ tb.today.bg }};color:{{ tb.today.fg }};box-shadow:3px 2px 8px rgba(0,0,0,.05);cursor:pointer">Today</button>
+<button onClick="{{ goCal }}" style="writing-mode:vertical-rl;font-size:10px;letter-spacing:.16em;text-transform:uppercase;width:28px;height:78px;flex:none;padding:0;border:1px solid {{ tb.calendar.bd }};border-left:0;border-radius:0 5px 5px 0;background:{{ tb.calendar.bg }};color:{{ tb.calendar.fg }};box-shadow:3px 2px 8px rgba(0,0,0,.05);cursor:pointer">Month</button>
+<button onClick="{{ goSearch }}" style="writing-mode:vertical-rl;font-size:10px;letter-spacing:.16em;text-transform:uppercase;width:28px;height:78px;flex:none;padding:0;border:1px solid {{ tb.search.bd }};border-left:0;border-radius:0 5px 5px 0;background:{{ tb.search.bg }};color:{{ tb.search.fg }};box-shadow:3px 2px 8px rgba(0,0,0,.05);cursor:pointer">Search</button>
+<button onClick="{{ goInsights }}" style="writing-mode:vertical-rl;font-size:10px;letter-spacing:.16em;text-transform:uppercase;width:28px;height:78px;flex:none;padding:0;border:1px solid {{ tb.insights.bd }};border-left:0;border-radius:0 5px 5px 0;background:{{ tb.insights.bg }};color:{{ tb.insights.fg }};box-shadow:3px 2px 8px rgba(0,0,0,.05);cursor:pointer">Insight</button>
+<button onClick="{{ goSettings }}" style="writing-mode:vertical-rl;font-size:10px;letter-spacing:.16em;text-transform:uppercase;width:28px;height:70px;flex:none;margin-top:auto;padding:0;border:1px solid {{ tb.settings.bd }};border-left:0;border-radius:0 5px 5px 0;background:{{ tb.settings.bg }};color:{{ tb.settings.fg }};box-shadow:3px 2px 8px rgba(0,0,0,.05);cursor:pointer">Setting</button>
+</div>
+</sc-if>
+<sc-if value="{{ sLock }}" hint-placeholder-val="{{ false }}"><div style="width:12px;flex:none"></div></sc-if>
+</div>
+
+<sc-if value="{{ ios }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:50%;bottom:8px;width:134px;height:5px;margin-left:-67px;border-radius:3px;background:#000"></div></sc-if>
+<sc-if value="{{ android }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:50%;bottom:10px;width:108px;height:4px;margin-left:-54px;border-radius:2px;background:#000;opacity:.7"></div></sc-if>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;440px&quot;,&quot;height&quot;:&quot;920px&quot;},&quot;palette&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;atmosphere&quot;,&quot;light&quot;],&quot;default&quot;:&quot;atmosphere&quot;,&quot;tsType&quot;:&quot;'atmosphere'|'light'&quot;},&quot;platform&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ios&quot;,&quot;android&quot;],&quot;default&quot;:&quot;ios&quot;,&quot;tsType&quot;:&quot;'ios'|'android'&quot;},&quot;screen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;lock&quot;,&quot;today&quot;,&quot;write&quot;,&quot;entry&quot;,&quot;calendar&quot;,&quot;search&quot;,&quot;insights&quot;,&quot;settings&quot;],&quot;default&quot;:&quot;today&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;controls&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  PAL = {
+    atmosphere: { point: '#497AB7', wash: '#B7D1EA', moods: ['#497AB7', '#6DA9D2', '#AAAAC4', '#5CC6C3', '#E3CC81'] },
+    light: { point: '#496275', wash: '#C8E4CA', moods: ['#496275', '#A693AC', '#999393', '#7AB6D9', '#D5CD94'] }
+  };
+  MOODL = ['최악', '별로', '보통', '좋음', '최고'];
+  EMO = ['평온', '기쁨', '감사', '설렘', '만족', '뿌듯', '활기', '생각많음', '불안', '피곤', '초조', '외로움'];
+  PROMPTS = [
+    '오늘을 오늘답게 만든 건 무엇이었나요?',
+    '기억하고 싶은 작은 순간을 적어보세요.',
+    '내려놓아도 괜찮은 마음이 있나요?',
+    '오늘 떠오른 사람은 누구였고, 왜였나요?',
+    '내일의 내가 고마워할 일은 무엇일까요?'
+  ];
+  SUGGEST = ['집', '일', '친구', '가족', '건강', '음식', '자연', '아침'];
+  TABS = ['today', 'calendar', 'search', 'insights', 'settings'];
+  DOW = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  scrollRef = React.createRef();
+
+  blank(p) { return { title: '', body: '', mood: 0, emotions: [], tags: [], photo: false, prompt: p || '', tagText: '' }; }
+  demoDraft() { return { title: '천창에 떨어지는 빗소리', body: '알람보다 먼저 깨서 한참 빗소리를 들었다. 작은 주전자에 커피를 내리고, 아홉 시까지 휴대폰을 보지 않았다.', mood: 4, emotions: ['평온', '만족'], tags: ['집', '아침'], photo: false, prompt: '기억하고 싶은 작은 순간을 적어보세요.', tagText: '' }; }
+
+  seed() {
+    const E = (id, m, d, time, title, mood, emotions, tags, weather, place, photo, body) => ({ id, y: 2026, m, d, time, title, mood, emotions, tags, weather, place, photo, body });
+    return [
+      E('e1', 10, 15, '08:12', '느린 일요일', 4, ['평온', '만족'], ['집', '아침'], '9° 비', '집', true, '밤새 비가 왔고 아무 계획이 없었다. 팬케이크는 엉망으로 구워졌지만 그래도 다 먹었다.\n\n조용한 하루를 보내자고 늘 다짐하고는 결국 일정을 채워 넣곤 했는데, 오늘은 정말 그러지 않았다. 책 마흔 쪽을 읽고, 화분에 물을 주고, 엄마랑 한 시간 통화했다.'),
+      E('e2', 10, 14, '22:40', '마야와 저녁', 5, ['기쁨', '감사'], ['친구', '음식'], '12° 맑음', '을지로 식당', true, '마야가 드디어 합격했다. 전채를 세 개나 시켜 나눠 먹고, 면접에서 대표 이름을 잘못 부른 얘기에 한참 웃었다.\n\n강을 따라 먼 길로 걸어서 집에 왔다. 이렇게 서두르지 않고 시끌벅적한 저녁이 더 많았으면 좋겠다.'),
+      E('e3', 10, 13, '19:05', '마감 주간', 2, ['불안', '피곤'], ['일'], '10° 흐림', '사무실', false, '내일까지 리뷰 세 개인데 하나 끝냈다. 점심을 걸렀는데 그건 늘 도움이 안 된다. 지난번에도 금요일의 나는 살아남았다는 걸 기억하려고 적어둔다.'),
+      E('e4', 10, 12, '07:30', '아침 달리기', 4, ['활기', '뿌듯'], ['건강', '아침'], '6° 안개', '한강 산책로', true, '여름 이후 처음으로 쉬지 않고 5킬로를 뛰었다. 안개가 물 위에 내려앉아 모든 소리가 먹먹했다. 다리는 무거웠고 머리는 맑았다.'),
+      E('e5', 10, 10, '21:15', '보내지 않은 편지', 3, ['생각많음'], ['가족'], '8° 흐림', '집', false, '아빠에게 두 장을 쓰고 서랍에 넣었다. 어쩌면 처음부터 그러려고 쓴 건지도 모르겠다.'),
+      E('e6', 10, 8, '16:00', '장터에서 산 것들', 4, ['만족', '설렘'], ['음식', '자연'], '11° 맑음', '토요 장터', true, '모과 몇 알, 이가 나간 파란 그릇, 현관에 둘 마른 수국 한 다발. 꿀 가게 아저씨가 나를 기억해 주셨다.'),
+      E('e7', 10, 6, '23:10', '잠이 안 오는 밤', 1, ['초조', '외로움'], ['밤'], '5° 맑음', '집', false, '열한 시가 넘었는데 머릿속에서 2019년의 대화가 계속 재생된다. 오늘따라 집이 너무 넓게 느껴진다.'),
+      E('e8', 10, 4, '18:20', '첫서리', 3, ['평온'], ['자연'], '1° 서리', '주말농장', true, '케일은 살아남았고 다알리아는 그러지 못했다. 구근을 캐서 신문지에 싸 창고에 넣어두었다.'),
+      E('e9', 10, 2, '12:00', '새 노트, 새 달', 4, ['설렘'], ['목표'], '13° 맑음', '카페 로사', false, '11월의 세 가지: 일주일에 두 번 달리기, 거의 매일 여기에 쓰기, 퀼트 끝내기.'),
+      E('e10', 9, 30, '20:00', '호박 조각하는 밤', 5, ['기쁨'], ['친구'], '9° 맑음', '수진이네', true, '다섯 명이서 호박 일곱 개를 조각했다. 내 건 어리둥절한 부엉이 같았고 수진이 건 진짜 무서웠다.'),
+      E('e11', 9, 24, '09:40', '바다로 가는 기차', 4, ['설렘', '평온'], ['자연'], '14° 바람', '강릉 가는 기차', false, '창가 자리, 보온병에 담은 차, 정오까지는 아무 데도 갈 필요가 없다.'),
+      E('e12', 9, 19, '22:05', '어려운 대화', 2, ['불안', '생각많음'], ['일'], '10° 비', '집', false, '팀장님께 일이 너무 많다고 말했다. 끝까지 들어주셨다. 아직 떨리지만 한결 가볍다.')
+    ];
+  }
+
+  state = {
+    plat: null,
+    screen: (this.props && this.props.screen) || 'today',
+    back: 'today',
+    code: '',
+    entries: this.seed(),
+    openId: 'e2',
+    promptIdx: 0,
+    draft: (this.props && this.props.screen === 'write') ? this.demoDraft() : this.blank(''),
+    calM: 10,
+    calSel: 14,
+    query: '',
+    tagF: null,
+    set: { lock: true, bio: true, prompts: true, remind: true, stamp: true }
+  };
+
+  componentDidUpdate(pp, ps) {
+    if (pp.screen !== this.props.screen && this.props.screen) this.setState({ screen: this.props.screen });
+    if (ps.screen !== this.state.screen && this.scrollRef.current) this.scrollRef.current.scrollTop = 0;
+  }
+
+  go(s) { this.setState(st => ({ screen: s, back: this.TABS.includes(st.screen) ? st.screen : st.back, code: '' })); }
+  open(id) { this.setState({ openId: id }); this.go('entry'); }
+  write(p) { this.setState({ draft: this.blank(p) }); this.go('write'); }
+  setDraft(patch) { this.setState(st => ({ draft: { ...st.draft, ...patch } })); }
+  toggleIn(arr, v) { return arr.includes(v) ? arr.filter(x => x !== v) : [...arr, v]; }
+  key(k) {
+    if (k === 'del') return this.setState(st => ({ code: st.code.slice(0, -1) }));
+    if (k === 'bio') return this.setState({ screen: 'today', code: '' });
+    if (k === '' || this.state.code.length >= 4) return;
+    const code = this.state.code + k;
+    this.setState({ code });
+    if (code.length === 4) setTimeout(() => this.setState({ screen: 'today', code: '' }), 280);
+  }
+  save() {
+    const d = this.state.draft;
+    if (!d.title.trim() && !d.body.trim()) return;
+    const st = this.state.set.stamp;
+    const e = { id: 'n' + Date.now(), y: 2026, m: 10, d: 15, time: this.nowTime(), title: d.title.trim() || '제목 없음', body: d.body.trim(), mood: d.mood || 3, emotions: d.emotions, tags: d.tags, photo: d.photo, weather: st ? '9° 비' : '—', place: st ? '집' : '—' };
+    this.setState(s => ({ entries: [e, ...s.entries], openId: e.id, screen: 'entry', back: 'today', draft: this.blank('') }));
+  }
+  nowTime() { const n = new Date(); return String(n.getHours()).padStart(2, '0') + ':' + String(n.getMinutes()).padStart(2, '0'); }
+  sortKey(e) { return e.y * 1e8 + e.m * 1e6 + e.d * 1e4 + parseInt(e.time.replace(':', ''), 10); }
+  md(m, d) { return (m + 1) + '.' + String(d).padStart(2, '0'); }
+
+  renderVals() {
+    const st = this.state;
+    const P = this.PAL[this.props.palette] || this.PAL.atmosphere;
+    const MC = P.moods;
+    const fgOn = i => (i === 0 ? '#fffdf8' : '#000');
+    const plat = st.plat || this.props.platform || 'ios';
+    const ios = plat === 'ios';
+    const s = st.screen;
+    const entries = [...st.entries].sort((a, b) => this.sortKey(b) - this.sortKey(a));
+    const byDay = (y, m, d) => entries.filter(e => e.y === y && e.m === m && e.d === d);
+    const view = e => ({
+      title: e.title, time: e.time,
+      excerpt: e.body.length > 60 ? e.body.slice(0, 60).replace(/\s+\S*$/, '') + '…' : e.body,
+      dd: String(e.d).padStart(2, '0'), md: this.md(e.m, e.d), dow: this.DOW[new Date(e.y, e.m, e.d).getDay()],
+      moodC: MC[e.mood - 1], moodL: this.MOODL[e.mood - 1], tagsStr: e.tags.map(t => '#' + t).join(' '),
+      open: () => this.open(e.id)
+    });
+    const chip = on => ({ bg: on ? P.point : 'transparent', fg: on ? '#fffdf8' : '#000', border: on ? P.point : 'rgba(0,0,0,.25)' });
+
+    const week = [9, 10, 11, 12, 13, 14, 15].map((d, i) => {
+      const es = byDay(2026, 10, d);
+      const mi = es.length ? es[0].mood - 1 : -1;
+      return { d, dow: ['M', 'T', 'W', 'T', 'F', 'S', 'S'][i], bg: mi >= 0 ? MC[mi] : (d === 15 ? P.wash : 'transparent'), fg: mi >= 0 ? fgOn(mi) : '#000', weight: d === 15 ? 700 : 400, deco: d === 15 ? 'underline' : 'none' };
+    });
+
+    const d = st.draft;
+    const allTags = Array.from(new Set([...this.SUGGEST, ...d.tags]));
+    const ent0 = st.entries.find(e => e.id === st.openId) || entries[0];
+
+    const cal = new Date(2026, st.calM, 1);
+    const cy = cal.getFullYear(), cm = cal.getMonth();
+    const lead = (cal.getDay() + 6) % 7;
+    const dim = new Date(cy, cm + 1, 0).getDate();
+    const hatch = 'repeating-linear-gradient(135deg,transparent 0 6px,#ecece9 6px 7px)';
+    const cells = [];
+    const blankCell = () => ({ d: '', bg: hatch, fg: '#000', ring: 'none', weight: 400, deco: 'none', pick: () => {} });
+    for (let i = 0; i < lead; i++) cells.push(blankCell());
+    for (let day = 1; day <= dim; day++) {
+      const es = byDay(cy, cm, day);
+      const mi = es.length ? es[0].mood - 1 : -1;
+      const sel = day === st.calSel;
+      const today = cy === 2026 && cm === 10 && day === 15;
+      cells.push({ d: day, bg: mi >= 0 ? MC[mi] : (today ? P.wash : 'transparent'), fg: mi >= 0 ? fgOn(mi) : '#000', ring: sel ? 'inset 0 0 0 2px #000' : 'none', weight: today || sel ? 700 : 400, deco: today ? 'underline' : 'none', pick: () => this.setState({ calSel: day }) });
+    }
+    while (cells.length % 7) cells.push(blankCell());
+    const selDay = Math.min(st.calSel, dim);
+    const selEntries = byDay(cy, cm, selDay).map(view);
+
+    const q = st.query.trim().toLowerCase();
+    const results = entries.filter(e => (!st.tagF || e.tags.includes(st.tagF)) && (!q || (e.title + ' ' + e.body + ' ' + e.tags.join(' ') + ' ' + e.emotions.join(' ') + ' ' + e.place).toLowerCase().includes(q))).map(view);
+    const tc = {};
+    entries.forEach(e => e.tags.forEach(t => tc[t] = (tc[t] || 0) + 1));
+    const tagList = Object.keys(tc).sort((a, b) => tc[b] - tc[a]).map((t, i) => {
+      const on = st.tagF === t;
+      return { no: String(i + 1).padStart(2, '0'), l: t, n: tc[t], bg: on ? P.point : 'transparent', fg: on ? '#fffdf8' : '#000', toggle: () => this.setState(x => ({ tagF: x.tagF === t ? null : t })) };
+    });
+
+    const heat = [], recent30 = [];
+    for (let i = 29; i >= 0; i--) {
+      const dt = new Date(2026, 10, 15 - i);
+      const es = byDay(dt.getFullYear(), dt.getMonth(), dt.getDate());
+      recent30.push(...es);
+      heat.push({ c: es.length ? MC[es[0].mood - 1] : 'transparent' });
+    }
+    const mixN = [1, 2, 3, 4, 5].map(v => recent30.filter(e => e.mood === v).length);
+    const maxN = Math.max(1, ...mixN);
+    const mix = [4, 3, 2, 1, 0].map(i => ({ l: this.MOODL[i], c: MC[i], n: mixN[i], w: Math.round(mixN[i] / maxN * 100) + '%' }));
+    const ec = {};
+    recent30.forEach(e => e.emotions.forEach(x => ec[x] = (ec[x] || 0) + 1));
+    const emoTop = Object.keys(ec).sort((a, b) => ec[b] - ec[a]).slice(0, 6).map((l, i) => ({ no: String(i + 1).padStart(2, '0'), l, n: ec[l] }));
+    const avg = recent30.length ? recent30.reduce((a, e) => a + e.mood, 0) / recent30.length : 3;
+
+    const S = st.set;
+    const setK = (k, v) => this.setState(x => ({ set: { ...x.set, [k]: v } }));
+    const tog = (k, l, sub) => ({ l, sub, isToggle: true, value: '', onBg: S[k] ? P.point : 'transparent', onFg: S[k] ? '#fffdf8' : '#000', offBg: S[k] ? 'transparent' : '#000', offFg: S[k] ? '#000' : '#fffdf8', setOn: () => setK(k, true), setOff: () => setK(k, false) });
+    const row = (l, sub, value) => ({ l, sub, value, isToggle: false });
+    const groups = [
+      { title: 'Privacy', rows: [tog('lock', '암호 잠금', '앱을 열 때 암호 확인'), tog('bio', ios ? 'Face ID' : '지문 인식', '암호 대신 사용'), row('잠금 시점', '', '즉시')] },
+      { title: 'Writing', rows: [tog('prompts', '오늘의 질문', 'Today에 표시'), tog('remind', '저녁 알림', '매일 21:00'), tog('stamp', '날씨·위치 기록', '새 글에 자동으로 남기기')] },
+      { title: 'Data', rows: [row('내보내기', 'PDF · Markdown', ''), row('백업', '암호화 · 2시간 전', '')] }
+    ];
+
+    const subs = { 2: 'ABC', 3: 'DEF', 4: 'GHI', 5: 'JKL', 6: 'MNO', 7: 'PQRS', 8: 'TUV', 9: 'WXYZ' };
+    const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'bio', '0', 'del'].map(k => {
+      const digit = /\d/.test(k);
+      return { label: digit ? k : (k === 'del' ? '←' : (S.bio ? (ios ? 'FACE ID' : 'FINGERPRINT') : '')), sub: subs[k] || '', size: digit ? '22px' : (k === 'del' ? '18px' : '9.5px'), ls: digit || k === 'del' ? '0' : '.14em', press: () => this.key(k === 'bio' && !S.bio ? '' : k) };
+    });
+
+    const active = this.TABS.includes(s) ? s : st.back;
+    const tab = k => active === k ? { bg: P.point, fg: '#fffdf8', bd: P.point } : { bg: '#fffdf8', fg: 'rgba(0,0,0,.52)', bd: 'rgba(0,0,0,.13)' };
+    const edt = new Date(ent0.y, ent0.m, ent0.d);
+
+    return {
+      P,
+      controls: this.props.controls ?? true,
+      ios, android: !ios,
+      setIOS: () => this.setState({ plat: 'ios' }), setAndroid: () => this.setState({ plat: 'android' }),
+      iosBtnBg: ios ? '#000' : 'transparent', iosBtnFg: ios ? '#fffdf8' : '#000', andBtnBg: ios ? 'transparent' : '#000', andBtnFg: ios ? '#000' : '#fffdf8',
+      scrollRef: this.scrollRef,
+      sLock: s === 'lock', sToday: s === 'today', sWrite: s === 'write', sEntry: s === 'entry', sCal: s === 'calendar', sSearch: s === 'search', sInsights: s === 'insights', sSettings: s === 'settings',
+      showTabs: s !== 'lock',
+      tb: { today: tab('today'), calendar: tab('calendar'), search: tab('search'), insights: tab('insights'), settings: tab('settings') },
+      goToday: () => this.go('today'), goCal: () => this.go('calendar'), goSearch: () => this.go('search'), goInsights: () => this.go('insights'), goSettings: () => this.go('settings'),
+      goBack: () => this.go(st.back),
+      writeNew: () => this.write(''),
+      lockNow: () => this.go('lock'),
+      dots: [0, 1, 2, 3].map(i => ({ bg: i < st.code.length ? P.point : 'transparent' })), keys,
+      showPrompt: S.prompts, prompt: this.PROMPTS[st.promptIdx],
+      nextPrompt: () => this.setState(x => ({ promptIdx: (x.promptIdx + 1) % this.PROMPTS.length })),
+      writePrompt: () => this.write(this.PROMPTS[st.promptIdx]),
+      week, recent: entries.slice(0, 5).map(view),
+      draft: d, noPhoto: !d.photo, nowTime: this.nowTime(), stampOn: S.stamp, hasDraftPrompt: !!d.prompt, hasMood: d.mood > 0,
+      moodOpts: MC.map((c, i) => {
+        const on = d.mood === i + 1;
+        return { c, l: this.MOODL[i], bg: on ? c : 'transparent', fg: on ? fgOn(i) : '#000', swBorder: on ? (i === 0 ? '#fffdf8' : '#000') : 'rgba(0,0,0,.13)', weight: on ? 700 : 400, pick: () => this.setDraft({ mood: i + 1 }) };
+      }),
+      emoChips: this.EMO.map(l => ({ l, ...chip(d.emotions.includes(l)), toggle: () => this.setDraft({ emotions: this.toggleIn(this.state.draft.emotions, l) }) })),
+      tagChips: allTags.map(l => ({ l, ...chip(d.tags.includes(l)), toggle: () => this.setDraft({ tags: this.toggleIn(this.state.draft.tags, l) }) })),
+      onTitle: e => this.setDraft({ title: e.target.value }),
+      onBody: e => this.setDraft({ body: e.target.value }),
+      onTagText: e => this.setDraft({ tagText: e.target.value }),
+      onTagKey: e => { if (e.key === 'Enter' && !e.nativeEvent.isComposing) { const t = this.state.draft.tagText.trim().replace(/[#\s]/g, ''); if (t) this.setDraft({ tags: [...new Set([...this.state.draft.tags, t])], tagText: '' }); } },
+      togglePhoto: () => this.setDraft({ photo: !this.state.draft.photo }),
+      saveOpacity: (d.title.trim() || d.body.trim()) ? 1 : 0.35,
+      save: () => this.save(),
+      ent: {
+        title: ent0.title, body: ent0.body, weather: ent0.weather, place: ent0.place, photo: ent0.photo, y: ent0.y,
+        md: this.md(ent0.m, ent0.d), sub: this.DOW[edt.getDay()] + ' · ' + ent0.time,
+        moodC: MC[ent0.mood - 1], moodL: this.MOODL[ent0.mood - 1], emo: ent0.emotions.join(' · '),
+        tags: ent0.tags.map(t => ({ l: t, go: () => { this.setState({ tagF: t, query: '' }); this.go('search'); } }))
+      },
+      monthLabel: this.MON[cm], calYear: cy,
+      prevMonth: () => this.setState(x => ({ calM: x.calM - 1, calSel: 1 })), nextMonth: () => this.setState(x => ({ calM: x.calM + 1, calSel: 1 })),
+      cells, moodLegend: MC.map((c, i) => ({ c, l: this.MOODL[i] })),
+      selMd: this.md(cm, selDay), selDow: this.DOW[new Date(cy, cm, selDay).getDay()],
+      selEntries, selEmpty: selEntries.length === 0,
+      query: st.query, onQuery: e => this.setState({ query: e.target.value }),
+      tagList, results, resultCount: results.length, resultLabel: 'Results · ' + results.length, tagFLabel: st.tagF ? '#' + st.tagF : 'All',
+      ins: { count: recent30.length, avg: this.MOODL[Math.round(avg) - 1], top: emoTop.length ? emoTop[0].l : '—' },
+      heat, mix, emoTop,
+      setGroups: groups
+    };
+  }
+}
+</script>
+</body>
+</html>
