@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "DIARY",
+    "slug": "diary",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.example.diary"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#fffdf8",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.example.diary"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-font",
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "\uc77c\uae30\uc5d0 \uc0ac\uc9c4\uc744 \ubd99\uc774\ub824\uba74 \uc0ac\uc9c4 \ubcf4\uad00\ud568 \uc811\uadfc\uc774 \ud544\uc694\ud574\uc694.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
+    ],
+    "scheme": "diary",
+    "backgroundColor": "#e7e8eb"
+  }
+}
