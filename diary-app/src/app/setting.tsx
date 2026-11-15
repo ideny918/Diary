@@ -2,7 +2,7 @@ import Constants from 'expo-constants';
 import React from 'react';
 import { Platform, Text, View } from 'react-native';
 
-import { Label, MkBtn, Muted, Screen, Seg } from '../components/ui';
+import { ConfirmButton, Label, MkBtn, Muted, Screen, Seg } from '../components/ui';
 import { useDiary } from '../store/DiaryContext';
 import { C, t } from '../theme';
 
@@ -21,7 +21,7 @@ function Row({ title, sub, children }: { title: string; sub?: string; children?:
 const onOff: [number, string][] = [[1, 'ON'], [0, 'OFF']];
 
 export default function SettingScreen() {
-  const { settings: S, setSetting, lock } = useDiary();
+  const { settings: S, setSetting, lock, clearAll } = useDiary();
   const ver = Constants.expoConfig?.version?.replace(/\.0$/, '') ?? '1.0';
   return (
     <Screen title="Setting" footL="Setting" footR={`v${ver}`}>
@@ -64,7 +64,12 @@ export default function SettingScreen() {
 
         <View>
           <Label>Data</Label>
-          <Muted style={{ marginTop: 8 }}>모든 기록은 이 기기에만 저장돼요. 처음 열면 예시 페이지가 들어 있어요.</Muted>
+          <Muted style={{ marginTop: 8, marginBottom: 12 }}>모든 기록은 이 기기에만 저장돼요. 처음 열면 예시 기록이 들어 있어요.</Muted>
+          <ConfirmButton
+            title="모든 기록 지우기"
+            message="Day·Week·Month·Year 기록, 노트, 습관과 습관 체크를 모두 지워요. 설정은 그대로 남아요. 되돌릴 수 없어요."
+            onConfirm={clearAll}
+          />
         </View>
       </View>
     </Screen>

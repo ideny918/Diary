@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Image, Pressable, Text, TextInput, View } from 'react-native';
 
 import {
-  Checklist, EmojiPicker, Field, HabitIcon, Label, LineInput, Muted, Nav, PhotoIcon, Screen,
+  Checklist, ConfirmButton, EmojiPicker, Field, HabitIcon, Label, LineInput, Muted, Nav, PhotoIcon, Screen,
 } from '../components/ui';
 import { addDays, DOW, dotted, dowIdx, parse, sleepH, todayStr } from '../data/dates';
 import { MOODS, WEATHERS } from '../data/kit';
@@ -14,7 +14,7 @@ import { C, noOutline, serif, t, tabular } from '../theme';
 
 /** Day: the Kit's daily spread, left page then right page, in one scroll. */
 export default function DayScreen() {
-  const { ui, setUI, day, setDay, book, settings, setHabitState, addNote } = useDiary();
+  const { ui, setUI, day, setDay, book, settings, setHabitState, addNote, clearDay } = useDiary();
   const d = ui.cursor;
   const k = day(d);
   const dt = parse(d);
@@ -212,6 +212,16 @@ export default function DayScreen() {
           <Muted>이 날 쓴 노트가 없어요.</Muted>
         )}
       </View>
+
+      {!!(book.days[d] || book.hlog[d]) && (
+        <View style={{ marginTop: 18, alignItems: 'flex-start' }}>
+          <ConfirmButton
+            title="이 날 기록 지우기"
+            message={`${dotted(d)}에 쓴 내용과 습관 체크를 지워요. 이 날의 노트는 남아요.`}
+            onConfirm={() => clearDay(d)}
+          />
+        </View>
+      )}
 
       <EmojiPicker
         visible={picker !== null}

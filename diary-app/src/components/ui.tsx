@@ -123,6 +123,21 @@ export function MkBtn({ title, onPress, on, style }: { title: string; onPress: (
   );
 }
 
+/** Destructive action with an inline "are you sure?" step (works the same on phone and web). */
+export function ConfirmButton({ title, message, confirmLabel = '지우기', onConfirm }: { title: string; message: string; confirmLabel?: string; onConfirm: () => void }) {
+  const [asking, setAsking] = useState(false);
+  if (!asking) return <MkBtn title={title} onPress={() => setAsking(true)} />;
+  return (
+    <View style={{ borderWidth: 1, borderColor: C.ink, padding: 12, rowGap: 10, backgroundColor: C.today }}>
+      <Text style={[t(13), { lineHeight: 20 }]}>{message}</Text>
+      <View style={{ flexDirection: 'row', columnGap: 8 }}>
+        <MkBtn title={confirmLabel} on onPress={() => { setAsking(false); onConfirm(); }} />
+        <MkBtn title="취소" onPress={() => setAsking(false)} />
+      </View>
+    </View>
+  );
+}
+
 export function PressRow({ style, children, ...rest }: PressableProps & { style?: StyleProp<ViewStyle>; children: React.ReactNode }) {
   return (
     <Pressable {...rest} style={({ pressed }) => [style, pressed && { backgroundColor: C.wash }]}>

@@ -37,6 +37,10 @@ type Actions = {
   moveHabit: (id: string, by: number) => void;
   deleteHabit: (id: string) => void;
   setHabitState: (d: string, id: string, s: HState) => void;
+  /** Erase one day's writing and habit checks (notes stay). */
+  clearDay: (d: string) => void;
+  /** Erase every record: days, weeks, months, notes, habits. Settings stay. */
+  clearAll: () => void;
   unlock: () => void;
   lock: () => void;
 };
@@ -132,6 +136,15 @@ export function DiaryProvider({ children }: { children: React.ReactNode }) {
         }),
       deleteHabit: id => book(b => ({ ...b, habits: b.habits.filter(h => h.id !== id) })),
       setHabitState: (d, id, s) => book(b => ({ ...b, hlog: { ...b.hlog, [d]: { ...b.hlog[d], [id]: s } } })),
+      clearDay: d =>
+        book(b => {
+          const days = { ...b.days };
+          const hlog = { ...b.hlog };
+          delete days[d];
+          delete hlog[d];
+          return { ...b, days, hlog };
+        }),
+      clearAll: () => book(() => ({ days: {}, weeks: {}, months: {}, notes: [], habits: [], hlog: {} })),
       unlock: () => setUnlocked(true),
       lock: () => setUnlocked(false),
     };
