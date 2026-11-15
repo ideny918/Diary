@@ -91,11 +91,23 @@ export function DiaryProvider({ children }: { children: React.ReactNode }) {
     return () => sub.remove();
   }, [lockOn]);
 
-  const setUI: Ctx['setUI'] = patch => setUIState(u => ({ ...u, ...(typeof patch === 'function' ? patch(u) : patch) }));
-  const setSetting = (k: keyof Settings, v: boolean) => setData(d => ({ ...d, settings: { ...d.settings, [k]: v } }));
-  const setDraft: Ctx['setDraft'] = patch =>
-    setData(d => ({ ...d, draft: { ...d.draft, ...(typeof patch === 'function' ? patch(d.draft) : patch) } }));
-  const resetDraft = (prompt = '') => setData(d => ({ ...d, draft: blankDraft(prompt) }));
+  // Setters must keep the same identity across renders: screens use them in effect deps.
+  const actions = useMemo(
+    () => ({
+      setUI: ((patch) =>
+        setUIState(u => {
+          const next = typeof patch === 'function' ? patch(u) : patch;
+          const changed = (Object.keys(next) as (keyof UI)[]).some(k => next[k] !== u[k]);
+          return changed ? { ...u, ...next } : u; // same object = no re-render
+        })) as Ctx['setUI'],
+      setSetting: (k: keyof Settings, v: boolean) => setData(d => ({ ...d, settings: { ...d.settings, [k]: v } })),
+      setDraft: ((patch) =>
+        setData(d => ({ ...d, draft: { ...d.draft, ...(typeof patch === 'function' ? patch(d.draft) : patch) } }))) as Ctx['setDraft'],
+      resetDraft: (prompt = '') => setData(d => ({ ...d, draft: blankDraft(prompt) })),
+    }),
+    [setUIState, setData],
+  );
+  const { setUI, setSetting, setDraft, resetDraft } = actions;
 
   const saveDraft = () => {
     const { draft: dr, settings } = data;
