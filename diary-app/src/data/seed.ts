@@ -1,41 +1,67 @@
-import { Entry } from './types';
-
-export const EMOTIONS = ['평온', '기쁨', '감사', '설렘', '만족', '뿌듯', '활기', '생각많음', '불안', '피곤', '초조', '외로움'];
-
-export const PROMPTS = [
-  '오늘을 오늘답게 만든 건 무엇이었나요?',
-  '기억하고 싶은 작은 순간을 적어보세요.',
-  '내려놓아도 괜찮은 마음이 있나요?',
-  '오늘 떠오른 사람은 누구였고, 왜였나요?',
-  '내일의 내가 고마워할 일은 무엇일까요?',
-];
-
-export const SUGGESTED_TAGS = ['집', '일', '친구', '가족', '건강', '음식', '자연', '아침'];
+import { addDays, fmt, startOf, todayStr } from './dates';
+import { Book, HState } from './types';
 
 /**
- * Weather / place stamp. The design uses sample values; no location or weather
- * service is wired up yet, so new entries get these placeholders when the
- * "날씨·위치 기록" setting is on.
+ * Sample pages for the first launch, placed around today so every screen has
+ * something to show. Users can overwrite or delete any of it.
  */
-export const STAMP_PLACEHOLDER = { weather: '9° 비', place: '집' };
+export function seedBook(): Book {
+  const t = todayStr();
+  const d = (n: number) => addDays(t, n);
+  const ym = t.slice(0, 7);
+  const ws = startOf(t, 0);
 
-const E = (
-  id: string, m: number, d: number, time: string, title: string, mood: number,
-  emotions: string[], tags: string[], weather: string, place: string, photo: boolean, body: string,
-): Entry => ({ id, y: 2026, m, d, time, title, mood, emotions, tags, weather, place, photo, body });
+  const days: Book['days'] = {
+    [d(0)]: {
+      wake: '07:10', bed: '23:40', mood: '🙂', weather: '🌧️',
+      event: '10:00 팀 회의\n19:30 요가',
+      todo: '▦ 장보기\n□ 책 반납하기\n□ 엄마한테 전화',
+      log: '비가 와서 하루 종일 집에 있었다.\n밀린 빨래를 하고 책을 40쪽 읽었다.',
+      joy: '창밖 빗소리 들으면서 마신 커피',
+      reset: '휴대폰은 밤 11시 이후 거실에 두기',
+      tomorrow: '아침 일찍 산책',
+    },
+    [d(-1)]: { wake: '07:30', bed: '00:20', mood: '😆', weather: '☀️', event: '저녁 약속 · 을지로', log: '마야 합격 축하 저녁. 먼 길로 걸어서 집에 왔다.', joy: '오래 웃은 저녁', todo: '▦ 선물 사기' },
+    [d(-2)]: { wake: '06:50', bed: '23:10', mood: '😴', weather: '☁️', log: '마감 주간. 리뷰 세 개 중 하나 끝냈다.', reset: '점심 거르지 않기', todo: '▦ 리뷰 1\n□ 리뷰 2\n□ 리뷰 3' },
+    [d(-3)]: { mood: '🙂', weather: '🌫️', log: '여름 이후 처음으로 쉬지 않고 5킬로를 뛰었다.', joy: '안개 낀 강변' },
+    [d(-5)]: { mood: '😐', weather: '☁️', log: '아빠에게 편지를 쓰고 서랍에 넣었다.' },
+    [d(-8)]: { mood: '😰', weather: '☀️', log: '잠이 안 오는 밤.', feeling: '괜히 마음이 무거웠다', talked: true },
+  };
 
-/** Sample entries shown on first launch (months are 0-based: 10 = November). */
-export const SEED: Entry[] = [
-  E('e1', 10, 15, '08:12', '느린 일요일', 4, ['평온', '만족'], ['집', '아침'], '9° 비', '집', true, '밤새 비가 왔고 아무 계획이 없었다. 팬케이크는 엉망으로 구워졌지만 그래도 다 먹었다.\n\n조용한 하루를 보내자고 늘 다짐하고는 결국 일정을 채워 넣곤 했는데, 오늘은 정말 그러지 않았다. 책 마흔 쪽을 읽고, 화분에 물을 주고, 엄마랑 한 시간 통화했다.'),
-  E('e2', 10, 14, '22:40', '마야와 저녁', 5, ['기쁨', '감사'], ['친구', '음식'], '12° 맑음', '을지로 식당', true, '마야가 드디어 합격했다. 전채를 세 개나 시켜 나눠 먹고, 면접에서 대표 이름을 잘못 부른 얘기에 한참 웃었다.\n\n강을 따라 먼 길로 걸어서 집에 왔다. 이렇게 서두르지 않고 시끌벅적한 저녁이 더 많았으면 좋겠다.'),
-  E('e3', 10, 13, '19:05', '마감 주간', 2, ['불안', '피곤'], ['일'], '10° 흐림', '사무실', false, '내일까지 리뷰 세 개인데 하나 끝냈다. 점심을 걸렀는데 그건 늘 도움이 안 된다. 지난번에도 금요일의 나는 살아남았다는 걸 기억하려고 적어둔다.'),
-  E('e4', 10, 12, '07:30', '아침 달리기', 4, ['활기', '뿌듯'], ['건강', '아침'], '6° 안개', '한강 산책로', true, '여름 이후 처음으로 쉬지 않고 5킬로를 뛰었다. 안개가 물 위에 내려앉아 모든 소리가 먹먹했다. 다리는 무거웠고 머리는 맑았다.'),
-  E('e5', 10, 10, '21:15', '보내지 않은 편지', 3, ['생각많음'], ['가족'], '8° 흐림', '집', false, '아빠에게 두 장을 쓰고 서랍에 넣었다. 어쩌면 처음부터 그러려고 쓴 건지도 모르겠다.'),
-  E('e6', 10, 8, '16:00', '장터에서 산 것들', 4, ['만족', '설렘'], ['음식', '자연'], '11° 맑음', '토요 장터', true, '모과 몇 알, 이가 나간 파란 그릇, 현관에 둘 마른 수국 한 다발. 꿀 가게 아저씨가 나를 기억해 주셨다.'),
-  E('e7', 10, 6, '23:10', '잠이 안 오는 밤', 1, ['초조', '외로움'], ['밤'], '5° 맑음', '집', false, '열한 시가 넘었는데 머릿속에서 2019년의 대화가 계속 재생된다. 오늘따라 집이 너무 넓게 느껴진다.'),
-  E('e8', 10, 4, '18:20', '첫서리', 3, ['평온'], ['자연'], '1° 서리', '주말농장', true, '케일은 살아남았고 다알리아는 그러지 못했다. 구근을 캐서 신문지에 싸 창고에 넣어두었다.'),
-  E('e9', 10, 2, '12:00', '새 노트, 새 달', 4, ['설렘'], ['목표'], '13° 맑음', '카페 로사', false, '11월의 세 가지: 일주일에 두 번 달리기, 거의 매일 여기에 쓰기, 퀼트 끝내기.'),
-  E('e10', 9, 30, '20:00', '호박 조각하는 밤', 5, ['기쁨'], ['친구'], '9° 맑음', '수진이네', true, '다섯 명이서 호박 일곱 개를 조각했다. 내 건 어리둥절한 부엉이 같았고 수진이 건 진짜 무서웠다.'),
-  E('e11', 9, 24, '09:40', '바다로 가는 기차', 4, ['설렘', '평온'], ['자연'], '14° 바람', '강릉 가는 기차', false, '창가 자리, 보온병에 담은 차, 정오까지는 아무 데도 갈 필요가 없다.'),
-  E('e12', 9, 19, '22:05', '어려운 대화', 2, ['불안', '생각많음'], ['일'], '10° 비', '집', false, '팀장님께 일이 너무 많다고 말했다. 끝까지 들어주셨다. 아직 떨리지만 한결 가볍다.'),
-];
+  const habits: Book['habits'] = [
+    { id: 'h1', name: '물 2L', icon: '💧', category: '건강관리', on: true, start: d(-27) },
+    { id: 'h2', name: '독서 20분', icon: '📖', category: '자기계발', on: true, start: d(-27) },
+    { id: 'h3', name: '스트레칭', icon: '🧘', category: '건강관리', on: true, start: d(-20) },
+    { id: 'h4', name: '일기 쓰기', icon: '✍️', category: '마음', on: true, start: d(-13) },
+  ];
+
+  // Deterministic pattern so the charts look lived-in.
+  const hlog: Book['hlog'] = {};
+  for (let i = -27; i <= 0; i++) {
+    const day = d(i);
+    const row: Record<string, HState> = {};
+    habits.forEach((h, k) => {
+      if (day < h.start) return;
+      const v = (i * 7 + k * 3 + 100) % 5;
+      row[h.id] = v < 3 ? 2 : v === 3 ? 1 : 0;
+    });
+    hlog[day] = row;
+  }
+  hlog[d(0)] = { h1: 2, h2: 0, h3: 1, h4: 0 };
+
+  return {
+    days,
+    weeks: { [ws]: { goal: '▦ 5킬로 달리기 두 번\n□ 퀼트 한 칸 끝내기\n□ 일찍 자기 (12시 전)', log: '마감 주간이라 바빴지만 운동은 지켰다.' } },
+    months: { [ym]: { goal: '□ 일주일에 두 번 달리기\n▦ 거의 매일 일기 쓰기\n□ 퀼트 끝내기', log: '' } },
+    notes: [
+      { id: 'n1', date: d(-1), name: '바다로 가는 기차', tag: '📗 에세이', on: true, body: '창가 자리에서 읽기 좋은 책.' },
+      { id: 'n2', date: d(-3), name: '카페 로사', tag: '☕️ 카페', on: false, body: '창이 큰 2층 자리. 라테가 맛있다.' },
+      { id: 'n3', date: d(-6), name: '가을 산책 코스', tag: '🌳 산책·여행', on: false, body: '강변 → 다리 → 공원 한 바퀴, 약 50분.' },
+      { id: 'n4', date: d(-9), name: '오랜만에 드라마', tag: '📺 드라마', on: true, body: '' },
+      { id: 'n5', date: d(-12), name: '수채화 연습', tag: '🎨 그리기', on: false, body: '물 조절이 제일 어렵다.' },
+      { id: 'n6', date: fmt(new Date(new Date().getFullYear(), 0, 12)), name: '새해 다짐', tag: '💡 생각', on: false, body: '' },
+    ],
+    habits,
+    hlog,
+  };
+}

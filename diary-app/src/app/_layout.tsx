@@ -1,16 +1,17 @@
+import { GowunBatang_400Regular, GowunBatang_700Bold } from '@expo-google-fonts/gowun-batang';
 import {
-  NunitoSans_300Light,
-  NunitoSans_400Regular,
-  NunitoSans_500Medium,
-  NunitoSans_600SemiBold,
-  NunitoSans_700Bold,
-  useFonts,
-} from '@expo-google-fonts/nunito-sans';
+  IBMPlexSansKR_300Light,
+  IBMPlexSansKR_400Regular,
+  IBMPlexSansKR_500Medium,
+  IBMPlexSansKR_600SemiBold,
+  IBMPlexSansKR_700Bold,
+} from '@expo-google-fonts/ibm-plex-sans-kr';
+import { useFonts } from 'expo-font';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Stack, usePathname } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BottomTabs } from '../components/BottomTabs';
@@ -18,11 +19,15 @@ import { DiaryProvider, useDiary } from '../store/DiaryContext';
 import { C } from '../theme';
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts(
-    Platform.OS === 'ios'
-      ? {} // iOS uses the system Avenir Next
-      : { NunitoSans_300Light, NunitoSans_400Regular, NunitoSans_500Medium, NunitoSans_600SemiBold, NunitoSans_700Bold },
-  );
+  const [fontsLoaded] = useFonts({
+    IBMPlexSansKR_300Light,
+    IBMPlexSansKR_400Regular,
+    IBMPlexSansKR_500Medium,
+    IBMPlexSansKR_600SemiBold,
+    IBMPlexSansKR_700Bold,
+    GowunBatang_400Regular,
+    GowunBatang_700Bold,
+  });
   return (
     <SafeAreaProvider>
       <DiaryProvider>
@@ -32,20 +37,19 @@ export default function RootLayout() {
   );
 }
 
-/**
- * The whole app sits on one "page" of a diary book: a paper card on a grey desk,
- * with a binding shadow on the left and index tabs hanging from its bottom edge.
- */
+/** One page of the diary book on a grey desk, binding shadow on the left, index tabs hanging below. */
 function Shell({ ready }: { ready: boolean }) {
   const insets = useSafeAreaInsets();
   const { hydrated, unlocked } = useDiary();
-  const pathname = usePathname();
-  const isLock = pathname === '/lock';
+  const isLock = usePathname() === '/lock';
 
   if (!ready || !hydrated) return <View style={{ flex: 1, backgroundColor: C.desk }} />;
 
   return (
-    <View style={[styles.desk, { paddingTop: insets.top + 6, paddingBottom: Math.max(insets.bottom, 12) }]}>
+    <KeyboardAvoidingView
+      style={[styles.desk, { paddingTop: insets.top + 6, paddingBottom: Math.max(insets.bottom, 12) }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
       <StatusBar style="dark" />
       <View style={styles.page}>
         <Stack screenOptions={{ headerShown: false, animation: 'none', contentStyle: { backgroundColor: C.paper } }}>
@@ -54,12 +58,15 @@ function Shell({ ready }: { ready: boolean }) {
           </Stack.Protected>
           <Stack.Protected guard={unlocked}>
             <Stack.Screen name="index" />
+            <Stack.Screen name="year" />
             <Stack.Screen name="month" />
-            <Stack.Screen name="search" />
-            <Stack.Screen name="insight" />
+            <Stack.Screen name="week" />
+            <Stack.Screen name="notes/index" />
+            <Stack.Screen name="notes/[cat]" />
+            <Stack.Screen name="note/[id]" />
+            <Stack.Screen name="habit/index" />
+            <Stack.Screen name="habit/[id]" />
             <Stack.Screen name="setting" />
-            <Stack.Screen name="write" />
-            <Stack.Screen name="entry/[id]" />
           </Stack.Protected>
         </Stack>
         <LinearGradient
@@ -71,7 +78,7 @@ function Shell({ ready }: { ready: boolean }) {
         />
       </View>
       {isLock || !unlocked ? <View style={{ height: 34 }} /> : <BottomTabs />}
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -86,5 +93,5 @@ const styles = StyleSheet.create({
     boxShadow: '1px 1px 0px rgba(0,0,0,0.13), 6px 8px 24px rgba(0,0,0,0.08)',
     overflow: 'hidden',
   },
-  binding: { position: 'absolute', left: 0, top: 0, bottom: 0, width: 22, zIndex: 4 },
+  binding: { position: 'absolute', left: 0, top: 0, bottom: 0, width: 28, zIndex: 4 },
 });

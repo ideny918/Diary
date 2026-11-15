@@ -1,125 +1,88 @@
 import React from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
-import { excerpt, openEntry } from '../components/EntryRow';
-import { Footer, Grid, Hatch, Header, MoodLine, PressRow, s, Swatch } from '../components/ui';
-import { dowOf, md, MONTHS } from '../data/dates';
+import { goTab } from '../components/BottomTabs';
+import { Checklist, Field, Hatch, Label, Nav, Screen } from '../components/ui';
+import { addDays, addMonths, MONTHS, monthRange, parse, rotDOW, startOf, todayStr, wno } from '../data/dates';
 import { useDiary } from '../store/DiaryContext';
-import { C, fgOnMood, MOOD_LABELS, P, t, tabular } from '../theme';
+import { C, t, tabular } from '../theme';
 
-type Cell = { day: number | null };
+/** Month: calendar with week links, mood/weather and events per day; monthly goal and period log below. */
+export default function MonthScreen() {
+  const { ui, setUI, day, book, settings, setMonth } = useDiary();
+  const [a, b] = monthRange(ui.cursor);
+  const ym = a.slice(0, 7);
+  const dt = parse(a);
+  const today = todayStr();
+  const start = startOf(a, settings.mStart);
+  const weeks: string[] = [];
+  for (let w = start; w <= b; w = addDays(w, 7)) weeks.push(w);
+  const mo = book.months[ym] ?? {};
 
-export default function Month() {
-  const { sorted, ui, setUI } = useDiary();
-  const today = new Date();
-  const first = new Date(ui.calY, ui.calM, 1);
-  const cy = first.getFullYear();
-  const cm = first.getMonth();
-  const lead = (first.getDay() + 6) % 7; // Monday-first
-  const dim = new Date(cy, cm + 1, 0).getDate();
-  const selDay = Math.min(ui.calSel, dim);
-
-  const byDay = (d: number) => sorted.filter(e => e.y === cy && e.m === cm && e.d === d);
-
-  const cells: Cell[] = [];
-  for (let i = 0; i < lead; i++) cells.push({ day: null });
-  for (let d = 1; d <= dim; d++) cells.push({ day: d });
-  while (cells.length % 7) cells.push({ day: null });
-
-  const shift = (n: number) => {
-    const dt = new Date(cy, cm + n, 1);
-    setUI({ calY: dt.getFullYear(), calM: dt.getMonth(), calSel: 1 });
+  const go = (d: string, tab: 'day' | 'week') => {
+    setUI({ cursor: d });
+    goTab(tab);
   };
 
-  const selEntries = byDay(selDay);
-
-  const navBtn = (text: string, onPress: () => void, a11y: string, arrowFirst: boolean) => (
-    <Pressable onPress={onPress} accessibilityLabel={a11y} hitSlop={6} style={{ height: 34, paddingHorizontal: 2, flexDirection: 'row', alignItems: 'center', columnGap: 5 }}>
-      {arrowFirst && <Text style={t(7)}>◀</Text>}
-      <Text style={t(10, 400, 0.16)}>{text}</Text>
-      {!arrowFirst && <Text style={t(7)}>▶</Text>}
-    </Pressable>
-  );
-
   return (
-    <View style={{ flex: 1 }}>
-      <Header
-        title={MONTHS[cm]}
-        sub={cy}
-        gap={10}
-        right={
-          <View style={{ flexDirection: 'row', alignItems: 'center', columnGap: 8 }}>
-            {navBtn('PREV', () => shift(-1), '이전 달', true)}
-            <View style={{ width: 1, height: 12, backgroundColor: C.ink, opacity: 0.7 }} />
-            {navBtn('NEXT', () => shift(1), '다음 달', false)}
-          </View>
-        }
-      />
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={[s.scroll, { paddingTop: 12, paddingBottom: 20, rowGap: 14 }]} showsVerticalScrollIndicator={false}>
-        <View>
-          <View style={{ flexDirection: 'row', paddingBottom: 6 }}>
-            {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (
-              <Text key={i} style={[t(10, 500, 0.16), { flex: 1, textAlign: 'center' }]}>{d}</Text>
-            ))}
-          </View>
-          <Grid
-            items={cells}
-            cols={7}
-            render={(c, i) => {
-              if (c.day === null) {
-                return <View style={{ height: 50, overflow: 'hidden' }}><Hatch id={`cal-${i}`} /></View>;
-              }
-              const day = c.day;
-              const es = byDay(day);
-              const mi = es.length ? es[0].mood - 1 : -1;
-              const isToday = cy === today.getFullYear() && cm === today.getMonth() && day === today.getDate();
-              const sel = day === selDay;
-              return (
-                <Pressable
-                  onPress={() => setUI({ calSel: day })}
-                  accessibilityLabel={`${cm + 1}월 ${day}일`}
-                  accessibilityState={{ selected: sel }}
-                  style={{ height: 50, paddingVertical: 5, paddingHorizontal: 6, backgroundColor: mi >= 0 ? P.moods[mi] : isToday ? P.wash : 'transparent' }}
-                >
-                  {sel && <View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderWidth: 2, borderColor: C.ink }} />}
-                  <Text style={[t(11, isToday || sel ? 700 : 400, 0, mi >= 0 ? fgOnMood(mi) : C.ink), tabular, isToday && { textDecorationLine: 'underline' }]}>{day}</Text>
-                </Pressable>
-              );
-            }}
-          />
-        </View>
-
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          {P.moods.map((c, i) => (
-            <View key={c} style={{ flexDirection: 'row', alignItems: 'center', columnGap: 5 }}>
-              <Swatch color={c} />
-              <Text style={t(11)}>{MOOD_LABELS[i]}</Text>
-            </View>
-          ))}
-        </View>
-
-        <View>
-          <View style={{ flexDirection: 'row', alignItems: 'baseline', columnGap: 8, paddingBottom: 6, borderBottomWidth: 1, borderColor: C.ink }}>
-            <Text style={[t(15, 600), tabular]}>{md(cm, selDay)}</Text>
-            <Text style={t(10, 400, 0.16, C.muted)}>{dowOf(cy, cm, selDay)}</Text>
-          </View>
-          {selEntries.map(e => (
-            <PressRow
-              key={e.id}
-              onPress={() => openEntry(e.id)}
-              style={{ rowGap: 3, paddingVertical: 10, paddingHorizontal: 2, borderBottomWidth: 1, borderColor: C.hair }}
+    <Screen
+      title={MONTHS[dt.getMonth()]}
+      sub={dt.getFullYear()}
+      right={
+        <Nav
+          onPrev={() => setUI({ cursor: addMonths(a, -1) })}
+          onNext={() => setUI({ cursor: addMonths(a, 1) })}
+          onToday={today.slice(0, 7) === ym ? undefined : () => setUI({ cursor: today })}
+        />
+      }
+      footL={ym.replace('-', ' / ')}
+      footR={dt.getFullYear()}
+    >
+      <View style={{ flexDirection: 'row', paddingBottom: 6, paddingLeft: 22 }}>
+        {rotDOW(settings.mStart).map(x => (
+          <Text key={x} style={[t(9.5, 500, 0.1), { flex: 1, textAlign: 'center' }]}>{x.slice(0, 1)}</Text>
+        ))}
+      </View>
+      <View style={{ borderTopWidth: 1, borderLeftWidth: 1, borderColor: C.ink }}>
+        {weeks.map(ws => (
+          <View key={ws} style={{ flexDirection: 'row' }}>
+            <Pressable
+              onPress={() => go(addDays(ws, settings.mStart), 'week')}
+              accessibilityLabel={`${wno(ws, settings.mStart)}주차`}
+              style={({ pressed }) => ({ width: 22, alignItems: 'center', justifyContent: 'center', borderRightWidth: 1, borderBottomWidth: 1, borderColor: C.ink, backgroundColor: pressed ? C.wash : 'transparent' })}
             >
-              <MoodLine mood={e.mood} marginTop={0}>
-                <Text style={[t(11.5, 400, 0, C.muted), tabular]}>{e.time}</Text>
-              </MoodLine>
-              <Text style={t(14, 600)}>{e.title}</Text>
-              <Text style={[t(12.5, 400, 0, C.muted), { lineHeight: 19 }]}>{excerpt(e.body)}</Text>
-            </PressRow>
-          ))}
-          {selEntries.length === 0 && <Text style={[t(12.5, 400, 0, C.muted), { marginTop: 10 }]}>이 날은 기록이 없어요.</Text>}
-        </View>
-      </ScrollView>
-      <Footer left="Month" right={cy} />
-    </View>
+              <Text style={[t(8, 500, 0.06), { transform: [{ rotate: '90deg' }], width: 40, textAlign: 'center' }]}>W{wno(ws, settings.mStart)}</Text>
+            </Pressable>
+            {[0, 1, 2, 3, 4, 5, 6].map(i => {
+              const d = addDays(ws, i);
+              const out = d < a || d > b;
+              const k = day(d);
+              const isToday = d === today;
+              return (
+                <View key={d} style={{ flex: 1, minWidth: 0, height: 64, borderRightWidth: 1, borderBottomWidth: 1, borderColor: C.ink, backgroundColor: isToday ? C.today : 'transparent', overflow: 'hidden' }}>
+                  {out ? (
+                    <Hatch id={`m-${d}`} />
+                  ) : (
+                    <Pressable onPress={() => go(d, 'day')} accessibilityLabel={`${d} 데일리로 이동`} style={({ pressed }) => ({ flex: 1, paddingTop: 4, paddingHorizontal: 4, backgroundColor: pressed ? C.wash : 'transparent' })}>
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Text style={[t(11, isToday ? 600 : 400), tabular, isToday && { textDecorationLine: 'underline' }]}>{parse(d).getDate()}</Text>
+                        {!!(k.mood || k.weather) && <Text style={{ fontSize: 9, lineHeight: 13 }}>{k.mood}{k.weather}</Text>}
+                      </View>
+                      {!!k.event && <Text style={[t(8.5, 400, 0, C.soft), { lineHeight: 11 }]} numberOfLines={3}>{k.event}</Text>}
+                    </Pressable>
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        ))}
+      </View>
+
+      <View style={{ borderBottomWidth: 1, borderColor: C.ink, paddingTop: 16, paddingBottom: 6, rowGap: 4 }}>
+        <Label>Monthly Goal</Label>
+        <Checklist value={mo.goal ?? ''} onChange={goal => setMonth(ym, { goal })} />
+      </View>
+      <Field title="Period Log" value={mo.log ?? ''} onChange={log => setMonth(ym, { log })} minHeight={64} sec />
+    </Screen>
   );
 }

@@ -1,88 +1,91 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 
-import { hhmm, sortKey } from '../data/dates';
-import { SEED, STAMP_PLACEHOLDER } from '../data/seed';
-import { blankDraft, DEFAULT_SETTINGS, Draft, Entry, Settings } from '../data/types';
+import { todayStr } from '../data/dates';
+import { seedBook } from '../data/seed';
+import { Book, Day, DEFAULT_SETTINGS, emptyDay, Habit, HState, Note, Period, Settings } from '../data/types';
 
-const STORAGE_KEY = 'diary:v1';
+const STORAGE_KEY = 'diarybook:v1';
 
-type Persisted = { entries: Entry[]; settings: Settings; draft: Draft };
+type Persisted = { book: Book; settings: Settings };
 
-export type TabKey = 'today' | 'month' | 'search' | 'insight' | 'setting';
-
-type UI = {
-  promptIdx: number;
-  calY: number;
-  calM: number;
-  calSel: number;
-  query: string;
-  tagF: string | null;
-  lastTab: TabKey;
+/** Screen state shared by the tabs (not saved). */
+export type UI = {
+  /** The date Year / Month / Week / Day are looking at, like the Kit's cursor. */
+  cursor: string;
+  yearMode: 'goal' | 'log';
+  notesYear: number;
+  notesYM: string; // YYYY-MM for the notes calendar
+  habitYM: string; // YYYY-MM for the habit summary
+  habitYear: number; // habit detail year
+  /** per-date offset for "다른 질문" (not saved, like the Kit) */
+  qoff: Record<string, number>;
 };
 
-type Ctx = Persisted & {
-  hydrated: boolean;
-  unlocked: boolean;
-  ui: UI;
-  /** Entries sorted newest first. */
-  sorted: Entry[];
+type Actions = {
   setUI: (patch: Partial<UI> | ((u: UI) => Partial<UI>)) => void;
-  setSetting: (k: keyof Settings, v: boolean) => void;
-  setDraft: (patch: Partial<Draft> | ((d: Draft) => Partial<Draft>)) => void;
-  resetDraft: (prompt?: string) => void;
-  /** Saves the draft as a new entry and returns its id (null when empty). */
-  saveDraft: () => string | null;
+  setSetting: <K extends keyof Settings>(k: K, v: Settings[K]) => void;
+  setDay: (d: string, patch: Partial<Day>) => void;
+  setWeek: (ws: string, patch: Partial<Period>) => void;
+  setMonth: (ym: string, patch: Partial<Period>) => void;
+  addNote: (date: string) => string;
+  setNote: (id: string, patch: Partial<Note>) => void;
+  deleteNote: (id: string) => void;
+  addHabit: (name: string, category: string) => string;
+  setHabit: (id: string, patch: Partial<Habit>) => void;
+  moveHabit: (id: string, by: number) => void;
+  deleteHabit: (id: string) => void;
+  setHabitState: (d: string, id: string, s: HState) => void;
   unlock: () => void;
   lock: () => void;
 };
 
+type Ctx = Persisted & Actions & { hydrated: boolean; unlocked: boolean; ui: UI; day: (d: string) => Day };
+
 const DiaryContext = createContext<Ctx | null>(null);
 
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
 export function DiaryProvider({ children }: { children: React.ReactNode }) {
-  const now = new Date();
+  const t = todayStr();
   const [hydrated, setHydrated] = useState(false);
-  const [data, setData] = useState<Persisted>({ entries: SEED, settings: DEFAULT_SETTINGS, draft: blankDraft() });
   const [unlocked, setUnlocked] = useState(false);
+  const [data, setData] = useState<Persisted>({ book: seedBook(), settings: DEFAULT_SETTINGS });
   const [ui, setUIState] = useState<UI>({
-    promptIdx: 0,
-    calY: now.getFullYear(),
-    calM: now.getMonth(),
-    calSel: now.getDate(),
-    query: '',
-    tagF: null,
-    lastTab: 'today',
+    cursor: t,
+    yearMode: 'goal',
+    notesYear: +t.slice(0, 4),
+    notesYM: t.slice(0, 7),
+    habitYM: t.slice(0, 7),
+    habitYear: +t.slice(0, 4),
+    qoff: {},
   });
 
-  // Load once.
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY)
       .then(raw => {
         if (!raw) return;
         const saved = JSON.parse(raw) as Partial<Persisted>;
         const settings = { ...DEFAULT_SETTINGS, ...saved.settings };
-        setData(d => ({
-          entries: saved.entries ?? d.entries,
-          settings,
-          draft: { ...blankDraft(), ...saved.draft },
-        }));
-        // With 암호 잠금 off, launch straight into the diary.
+        setData(d => ({ book: saved.book ?? d.book, settings }));
         if (!settings.lock) setUnlocked(true);
       })
       .catch(() => {})
       .finally(() => setHydrated(true));
   }, []);
 
-  const lockOn = data.settings.lock;
-
-  // Save on change (after hydration so we never overwrite stored data with defaults).
+  // Save shortly after the last change (typing writes on every keystroke).
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (!hydrated) return;
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data)).catch(() => {});
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data)).catch(() => {});
+    }, 400);
   }, [data, hydrated]);
 
-  // "잠금 시점: 즉시" — relock as soon as the app leaves the foreground.
+  const lockOn = data.settings.lock;
   useEffect(() => {
     if (!lockOn) return;
     const sub = AppState.addEventListener('change', s => {
@@ -91,63 +94,57 @@ export function DiaryProvider({ children }: { children: React.ReactNode }) {
     return () => sub.remove();
   }, [lockOn]);
 
-  // Setters must keep the same identity across renders: screens use them in effect deps.
-  const actions = useMemo(
-    () => ({
-      setUI: ((patch) =>
+  // Every action uses functional updates, so the object is created once and never changes identity.
+  const actions = useMemo<Actions>(() => {
+    const book = (f: (b: Book) => Book) => setData(d => ({ ...d, book: f(d.book) }));
+    return {
+      setUI: patch =>
         setUIState(u => {
           const next = typeof patch === 'function' ? patch(u) : patch;
           const changed = (Object.keys(next) as (keyof UI)[]).some(k => next[k] !== u[k]);
-          return changed ? { ...u, ...next } : u; // same object = no re-render
-        })) as Ctx['setUI'],
-      setSetting: (k: keyof Settings, v: boolean) => setData(d => ({ ...d, settings: { ...d.settings, [k]: v } })),
-      setDraft: ((patch) =>
-        setData(d => ({ ...d, draft: { ...d.draft, ...(typeof patch === 'function' ? patch(d.draft) : patch) } }))) as Ctx['setDraft'],
-      resetDraft: (prompt = '') => setData(d => ({ ...d, draft: blankDraft(prompt) })),
-    }),
-    [setUIState, setData],
-  );
-  const { setUI, setSetting, setDraft, resetDraft } = actions;
-
-  const saveDraft = () => {
-    const { draft: dr, settings } = data;
-    if (!dr.title.trim() && !dr.body.trim()) return null;
-    const at = new Date();
-    const e: Entry = {
-      id: 'n' + at.getTime(),
-      y: at.getFullYear(),
-      m: at.getMonth(),
-      d: at.getDate(),
-      time: hhmm(at),
-      title: dr.title.trim() || '제목 없음',
-      body: dr.body.trim(),
-      mood: dr.mood || 3,
-      emotions: dr.emotions,
-      tags: dr.tags,
-      photo: !!dr.photoUri,
-      photoUri: dr.photoUri ?? undefined,
-      weather: settings.stamp ? STAMP_PLACEHOLDER.weather : '—',
-      place: settings.stamp ? STAMP_PLACEHOLDER.place : '—',
+          return changed ? { ...u, ...next } : u;
+        }),
+      setSetting: (k, v) => setData(d => ({ ...d, settings: { ...d.settings, [k]: v } })),
+      setDay: (d, patch) => book(b => ({ ...b, days: { ...b.days, [d]: { ...b.days[d], ...patch } } })),
+      setWeek: (ws, patch) => book(b => ({ ...b, weeks: { ...b.weeks, [ws]: { ...b.weeks[ws], ...patch } } })),
+      setMonth: (ym, patch) => book(b => ({ ...b, months: { ...b.months, [ym]: { ...b.months[ym], ...patch } } })),
+      addNote: date => {
+        const id = 'n' + uid();
+        book(b => ({ ...b, notes: [...b.notes, { id, date, name: '', tag: '💡 생각', on: false, body: '' }] }));
+        return id;
+      },
+      setNote: (id, patch) => book(b => ({ ...b, notes: b.notes.map(n => (n.id === id ? { ...n, ...patch } : n)) })),
+      deleteNote: id => book(b => ({ ...b, notes: b.notes.filter(n => n.id !== id) })),
+      addHabit: (name, category) => {
+        const id = 'h' + uid();
+        book(b => ({ ...b, habits: [...b.habits, { id, name, icon: '', category, on: true, start: todayStr() }] }));
+        return id;
+      },
+      setHabit: (id, patch) => book(b => ({ ...b, habits: b.habits.map(h => (h.id === id ? { ...h, ...patch } : h)) })),
+      moveHabit: (id, by) =>
+        book(b => {
+          const i = b.habits.findIndex(h => h.id === id);
+          const j = i + by;
+          if (i < 0 || j < 0 || j >= b.habits.length) return b;
+          const hs = [...b.habits];
+          [hs[i], hs[j]] = [hs[j], hs[i]];
+          return { ...b, habits: hs };
+        }),
+      deleteHabit: id => book(b => ({ ...b, habits: b.habits.filter(h => h.id !== id) })),
+      setHabitState: (d, id, s) => book(b => ({ ...b, hlog: { ...b.hlog, [d]: { ...b.hlog[d], [id]: s } } })),
+      unlock: () => setUnlocked(true),
+      lock: () => setUnlocked(false),
     };
-    setData(d => ({ ...d, entries: [e, ...d.entries], draft: blankDraft() }));
-    return e.id;
-  };
+  }, [setData, setUIState, setUnlocked]);
 
-  const sorted = useMemo(() => [...data.entries].sort((a, b) => sortKey(b) - sortKey(a)), [data.entries]);
-
+  const days = data.book.days;
   const value: Ctx = {
     ...data,
+    ...actions,
     hydrated,
     unlocked,
     ui,
-    sorted,
-    setUI,
-    setSetting,
-    setDraft,
-    resetDraft,
-    saveDraft,
-    unlock: () => setUnlocked(true),
-    lock: () => setUnlocked(false),
+    day: d => ({ ...emptyDay, ...days[d] }),
   };
 
   return <DiaryContext.Provider value={value}>{children}</DiaryContext.Provider>;
