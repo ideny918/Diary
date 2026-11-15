@@ -4,6 +4,7 @@ import Svg, { Path, Rect } from 'react-native-svg';
 
 import { goTab } from '../components/BottomTabs';
 import { Checklist, Nav, Screen } from '../components/ui';
+import { YearEditor } from '../components/YearKeyword';
 import { MONTHS, todayStr } from '../data/dates';
 import { useDiary } from '../store/DiaryContext';
 import { C, font, noOutline, t } from '../theme';
@@ -82,6 +83,9 @@ export default function YearScreen() {
       footL={y}
       footR=""
     >
+      <View style={{ paddingBottom: 18 }}>
+        <YearEditor year={String(y)} />
+      </View>
       <View style={{ borderTopWidth: 1, borderLeftWidth: 1, borderColor: C.ink }}>
         {[0, 2, 4, 6, 8, 10].map(m => (
           <View key={m} style={{ flexDirection: 'row' }}>

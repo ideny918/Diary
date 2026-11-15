@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, Pressable, Text, TextInput, View } from 'react-native';
 
+import { KeywordLine } from '../components/YearKeyword';
 import {
   Checklist, ConfirmButton, EmojiPicker, Field, HabitIcon, Label, LineInput, Muted, Nav, PhotoIcon, Screen,
 } from '../components/ui';
@@ -62,7 +63,8 @@ export default function DayScreen() {
       footR={dt.getFullYear()}
     >
       {/* ── left page ── */}
-      <View style={{ flexDirection: 'row', columnGap: 6, justifyContent: 'flex-end', marginTop: -4, marginBottom: 6 }}>
+      <KeywordLine d={d} />
+      <View style={{ flexDirection: 'row', columnGap: 6, justifyContent: 'flex-end', marginTop: 8, marginBottom: 6 }}>
         {mwBtn('mood')}
         {mwBtn('weather')}
       </View>

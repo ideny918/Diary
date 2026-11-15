@@ -26,6 +26,18 @@ export function autoQ(d: string, off = 0) {
   return QUESTIONS[(((n * 37 + off) % N) + N) % N];
 }
 
+/* ───── year keyword · anti-goals ───── */
+
+export const antiList = (v: string) =>
+  v.split('\n').map(x => x.replace(/^\s*(?:[-•·]|\d+[.)])\s*/, '').trim()).filter(Boolean);
+
+/** The anti-goal shown on a given date: rotates through the list, one per day (as in the Kit). */
+export function antiOfDay(list: string[], d: string) {
+  if (!list.length) return '';
+  const [y, m, dd] = d.split('-').map(Number);
+  return list[Math.round(Date.UTC(y, m - 1, dd) / 864e5) % list.length];
+}
+
 /* ───── notes ───── */
 
 const tnorm = (s: string) => s.replace(/️/g, '');

@@ -4,7 +4,7 @@ import { AppState } from 'react-native';
 
 import { todayStr } from '../data/dates';
 import { seedBook } from '../data/seed';
-import { Book, Day, DEFAULT_SETTINGS, emptyDay, Habit, HState, Note, Period, Settings } from '../data/types';
+import { Book, Day, DEFAULT_SETTINGS, emptyBook, emptyDay, Habit, HState, Note, Period, Settings, YearRec } from '../data/types';
 
 const STORAGE_KEY = 'diarybook:v1';
 
@@ -29,6 +29,7 @@ type Actions = {
   setDay: (d: string, patch: Partial<Day>) => void;
   setWeek: (ws: string, patch: Partial<Period>) => void;
   setMonth: (ym: string, patch: Partial<Period>) => void;
+  setYear: (y: string, patch: Partial<YearRec>) => void;
   addNote: (date: string) => string;
   setNote: (id: string, patch: Partial<Note>) => void;
   deleteNote: (id: string) => void;
@@ -72,7 +73,8 @@ export function DiaryProvider({ children }: { children: React.ReactNode }) {
         if (!raw) return;
         const saved = JSON.parse(raw) as Partial<Persisted>;
         const settings = { ...DEFAULT_SETTINGS, ...saved.settings };
-        setData(d => ({ book: saved.book ?? d.book, settings }));
+        // older saves may miss newer fields (e.g. years)
+        setData(d => ({ book: saved.book ? { ...emptyBook(), ...saved.book } : d.book, settings }));
         if (!settings.lock) setUnlocked(true);
       })
       .catch(() => {})
@@ -112,6 +114,7 @@ export function DiaryProvider({ children }: { children: React.ReactNode }) {
       setDay: (d, patch) => book(b => ({ ...b, days: { ...b.days, [d]: { ...b.days[d], ...patch } } })),
       setWeek: (ws, patch) => book(b => ({ ...b, weeks: { ...b.weeks, [ws]: { ...b.weeks[ws], ...patch } } })),
       setMonth: (ym, patch) => book(b => ({ ...b, months: { ...b.months, [ym]: { ...b.months[ym], ...patch } } })),
+      setYear: (y, patch) => book(b => ({ ...b, years: { ...b.years, [y]: { ...b.years[y], ...patch } } })),
       addNote: date => {
         const id = 'n' + uid();
         book(b => ({ ...b, notes: [...b.notes, { id, date, name: '', tag: '💡 생각', on: false, body: '' }] }));
@@ -144,7 +147,7 @@ export function DiaryProvider({ children }: { children: React.ReactNode }) {
           delete hlog[d];
           return { ...b, days, hlog };
         }),
-      clearAll: () => book(() => ({ days: {}, weeks: {}, months: {}, notes: [], habits: [], hlog: {} })),
+      clearAll: () => book(() => emptyBook()),
       unlock: () => setUnlocked(true),
       lock: () => setUnlocked(false),
     };

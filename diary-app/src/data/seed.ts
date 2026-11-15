@@ -52,6 +52,7 @@ export function seedBook(): Book {
   return {
     days,
     weeks: { [ws]: { goal: '▦ 5킬로 달리기 두 번\n□ 퀼트 한 칸 끝내기\n□ 일찍 자기 (12시 전)', log: '마감 주간이라 바빴지만 운동은 지켰다.' } },
+    years: { [t.slice(0, 4)]: { keyword: '천천히, 꾸준히', anti: '밤 12시 넘어 휴대폰 보기\n끼니 거르기\n남과 비교하기' } },
     months: { [ym]: { goal: '□ 일주일에 두 번 달리기\n▦ 거의 매일 일기 쓰기\n□ 퀼트 끝내기', log: '' } },
     notes: [
       { id: 'n1', date: d(-1), name: '바다로 가는 기차', tag: '📗 에세이', on: true, body: '창가 자리에서 읽기 좋은 책.' },

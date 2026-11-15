@@ -21,6 +21,9 @@ export type Day = {
 /** Week / month planner page (Kit "Planner" DB). */
 export type Period = { goal: string; log: string };
 
+/** Year page: keyword + anti-goals (one per line). Key: 'YYYY'. */
+export type YearRec = { keyword: string; anti: string };
+
 export type Note = { id: string; date: string; name: string; tag: string; on: boolean; body: string };
 
 export type Habit = { id: string; name: string; icon: string; category: string; on: boolean; start: string };
@@ -42,6 +45,7 @@ export type Book = {
   days: Record<string, Partial<Day>>; // YYYY-MM-DD
   weeks: Record<string, Partial<Period>>; // week start YYYY-MM-DD
   months: Record<string, Partial<Period>>; // YYYY-MM
+  years: Record<string, Partial<YearRec>>; // YYYY
   notes: Note[];
   habits: Habit[]; // array order = habit order
   hlog: Record<string, Record<string, HState>>; // date -> habit id -> state
@@ -53,3 +57,5 @@ export const emptyDay: Day = {
   event: '', todo: '', log: '', joy: '', reset: '', tomorrow: '', comment: '', wake: '', bed: '',
   mood: '', weather: '', question: '', answer: '', feeling: '', talked: false, photoUri: '',
 };
+
+export const emptyBook = (): Book => ({ days: {}, weeks: {}, months: {}, years: {}, notes: [], habits: [], hlog: {} });
