@@ -9,11 +9,11 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Stack, usePathname } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { BottomTabs, tabForPath } from '../components/BottomTabs';
+import { BottomTabs } from '../components/BottomTabs';
 import { DiaryProvider, useDiary } from '../store/DiaryContext';
 import { C } from '../theme';
 
@@ -38,15 +38,9 @@ export default function RootLayout() {
  */
 function Shell({ ready }: { ready: boolean }) {
   const insets = useSafeAreaInsets();
-  const { hydrated, unlocked, setUI, ui } = useDiary();
+  const { hydrated, unlocked } = useDiary();
   const pathname = usePathname();
   const isLock = pathname === '/lock';
-
-  // Remember the last tab so Entry / Write keep it highlighted (and "back" returns there).
-  const tab = tabForPath(pathname);
-  useEffect(() => {
-    if (tab && tab !== ui.lastTab) setUI({ lastTab: tab });
-  }, [tab, ui.lastTab, setUI]);
 
   if (!ready || !hydrated) return <View style={{ flex: 1, backgroundColor: C.desk }} />;
 

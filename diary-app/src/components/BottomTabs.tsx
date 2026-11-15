@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
@@ -17,6 +17,7 @@ export function tabForPath(pathname: string): TabKey | null {
   return TABS.find(x => x.path === pathname)?.key ?? null;
 }
 
+/** Navigate to a tab. Callers record it as `ui.lastTab` (done in the press handler, never in an effect). */
 export function goTab(key: TabKey) {
   const tab = TABS.find(x => x.key === key)!;
   router.dismissTo(tab.path);
@@ -24,15 +25,21 @@ export function goTab(key: TabKey) {
 
 /** Index tabs hanging from the bottom edge of the page. The active one is filled with the point colour. */
 export function BottomTabs() {
-  const { ui } = useDiary();
+  const { ui, setUI } = useDiary();
+  const pathname = usePathname();
+  // On a tab screen the URL decides; on Entry / Write the tab you came from stays lit.
+  const active = tabForPath(pathname) ?? ui.lastTab;
   return (
     <View style={{ height: 34, flexDirection: 'row', columnGap: 4, paddingLeft: 22, paddingRight: 10 }}>
       {TABS.map(tab => {
-        const on = ui.lastTab === tab.key;
+        const on = active === tab.key;
         return (
           <Pressable
             key={tab.key}
-            onPress={() => goTab(tab.key)}
+            onPress={() => {
+              setUI({ lastTab: tab.key });
+              goTab(tab.key);
+            }}
             accessibilityRole="tab"
             accessibilityState={{ selected: on }}
             style={{

@@ -59,7 +59,7 @@ export default function EntryScreen() {
               label={'#' + tag}
               outlined
               onPress={() => {
-                setUI({ tagF: tag, query: '' });
+                setUI({ tagF: tag, query: '', lastTab: 'search' });
                 goTab('search');
               }}
             />
